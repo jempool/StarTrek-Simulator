@@ -47,6 +47,9 @@ function addKeyEvent(batship) {
   const stop = ['c', 'x']
   const space = [' ']
 
+  // variable to block repetitive shooting
+  let lockedShot = false
+
   document.body.addEventListener('keydown', (e) => {
     if (up.indexOf(e.key) >= 0) batship.setState(1, batship.state.direction)
     if (down.indexOf(e.key) >= 0) batship.setState(-1, batship.state.direction)
@@ -57,11 +60,18 @@ function addKeyEvent(batship) {
 
     if (space.indexOf(e.key) >= 0) {
 
-      const bulletId = Date.now()
-      const bullet = Bullet.create(galaxy, './assets/spaceship/bullet.png', 
-      batship.getX(), batship.getY(), batship.getAngle(), bulletId)
-      bullet.play()
-      bullet.setState(1, 0)
+      if(!lockedShot){
+        const bulletId = Date.now()
+        const bullet = Bullet.create(galaxy, './assets/spaceship/bullet.png', 
+        batship.getX(), batship.getY(), batship.getAngle(), bulletId)
+        bullet.play()
+        bullet.setState(1, 0)
+        lockedShot = true
+        setTimeout(() => {
+          lockedShot = false
+        }, 200);
+      } 
+      
     }
   })
 
