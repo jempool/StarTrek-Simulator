@@ -115,6 +115,7 @@ span a {
 
 /* End */
 
+
 h1{
   text-align: center;
   padding-top: 2%;
@@ -124,6 +125,7 @@ h1{
 body{
   background: rgba(1,18,28,255);
   font-family: "Roboto", sans-serif;
+  color: white;
 }
 
 #formularies{

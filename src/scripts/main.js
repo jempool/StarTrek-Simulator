@@ -123,6 +123,7 @@ function updateUserStatusInDOM() {
 async function loadLogin(){
   document.getElementById('galaxy').style.display = "none"
   document.getElementById('formularies').style.display = "block"
+  document.getElementsByClassName('create-box')[0].style.display = "none"
 
   const create_btn = document.getElementsByClassName('create')[0]
   create_btn.style.background = "none"
