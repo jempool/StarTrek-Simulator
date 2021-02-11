@@ -95,7 +95,7 @@ class Bullet {
     ships[enemyId].health -= 25    
     
     // 'Shooter' status after shooting
-    client.publish('teamName/topic1', { 
+    client.publish(channel, { 
       type: "Ship shooting", 
       id: myId, 
       health: ships[myId].health,
@@ -103,7 +103,7 @@ class Bullet {
     })
 
     // 'Enemy target' status after shooting
-    client.publish('teamName/topic1', { 
+    client.publish(channel, { 
       type: "Ship shooting", 
       id: enemyId, 
       health: ships[enemyId].health,

@@ -4,6 +4,7 @@ const NICKNAME = "SHA"
 const GENDER = "M"
 const SPRITEPATH = './assets/spaceship/batship.png'
 const TEAM = "1"
+let channel = 'teamName/topic'
 
 let galaxy = {}
 let ships = {}
@@ -19,7 +20,7 @@ const rabbitmqSettings = {
 
 async function connect(options) {
   try {
-    let channel = 'teamName/topic'
+    // let channel = 'teamName/topic'
     channel += ROOM
 
     const client = await RsupMQTT.connect(options)
@@ -101,6 +102,15 @@ function addKeyEvent(batship) {
         setTimeout(() => {
           lockedShot = false
         }, 200);
+
+      // broadcast the bullet movement to the other players
+      client.publish(channel, { 
+        type: "Bullets movement", 
+        id: ID, 
+        bulletId: bulletId + ID, 
+        x: ships[ID].x,
+        y: ships[ID].y,  
+        angle: ships[ID].angle })
       } 
       
     }
