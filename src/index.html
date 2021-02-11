@@ -20,6 +20,7 @@
   <script src="./scripts/classes/starship.js"></script>
   <script src="./scripts/utils.js"></script>
   <script src="./scripts/connection_utilities.js"></script>
+  <!-- <script src="./scripts/form_control.js"></script> -->
 
 </head>
 
@@ -33,20 +34,20 @@
     <button class = "join" onclick="loadJoinRoom()"> Join Room </button>
     <button class = "create" onclick="loadCreateRoom()"> Create Room </button>
 
-    <div class="form-inputs">
-      <input name="nickName" id="nickName" class="input" type="text" placeholder="Nick Name"> <br />
+    <div id="form-inputs">
+      <input name="nickName" id="nickName" class="input" type="text" placeholder="Nickname" onblur="alert('a')"> <br />
       <select name="gender" id ="gender" class="input optional">
         <option value="nonBinary">Non Binary</option>
         <option value="female">Female</option>
         <option value="male">Male</option>   
       </select> <br />
-      <select name="starship" id = "starship" class="input">
+      <select name="starship" id = "starship" class="input optional">
         <option value="enterprise">USS Entreprise</option>
         <option value="miranda">Clase Miranda</option>
         <option value="bird">Bird of Prey </option>
         <option value="devisor">IKS Devisor </option>
       </select> <br />
-      <select name="team" class="input" id ="team">
+      <select name="team" class="input optional" id ="team">
         <option value="klingon">Klingon</option>
         <option value="federation">Federation</option>
       </select> <br />
@@ -56,7 +57,11 @@
       <button type="submit" class = "btn" onclick="joinRoom()"> Join! </button> 
     </div>
   </div>
+
+  <script src="./scripts/form_control.js"></script>
+
 </body>
+
 
 </html>
 

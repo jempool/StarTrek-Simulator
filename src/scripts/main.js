@@ -81,33 +81,7 @@ async function loadLogin(){
   create_btn.style.color = "rgb(52, 52, 52)"
 }
 
-async function loadCreateRoom(){
 
-  document.getElementsByClassName('join-box')[0].style.display = "none"
-
-  const create_btn = document.getElementsByClassName('create')[0]
-  create_btn.style.background = "rgb(14, 1, 44)"
-  create_btn.style.color = "white" 
-
-  const join_btn = document.getElementsByClassName('join')[0]
-  join_btn.style.background = "none"
-  join_btn.style.color = "rgb(52, 52, 52)"
-  
-}
-
-async function loadJoinRoom(){
-
-  document.getElementsByClassName('join-box')[0].style.display = "block"
-
-  const join_btn = document.getElementsByClassName('join')[0]
-  join_btn.style.background = "rgb(14, 1, 44)"
-  join_btn.style.color = "white" 
-
-  const create_btn = document.getElementsByClassName('create')[0]
-  create_btn.style.background = "none"
-  create_btn.style.color = "rgb(52, 52, 52)"
-  
-}
 
 async function loadGame(){
   document.getElementById('galaxy').style.display = "block"
@@ -173,15 +147,6 @@ function createRoom(){
   changeGameState("game")
 }
 
-function joinRoom(){
-  const roomCode = document.getElementById('code').value
-  let dataDict = getFormInfo();
-
-  // console.log('Creating a player object')
-  // const player = Player.create(roomCode, dataDict["nickName"], dataDict["gender"], dataDict["starship"], dataDict["team"], "soldier")
-
-  changeGameState("game")
-}
 
 async function main() {
   console.log('Welcome to our Star Trek Simulator!')

@@ -7,11 +7,11 @@
 h1{
   text-align: center;
   padding-top: 2%;
-
+  color: white;
 }
 
 body{
-  background: #e9eaea;
+  background: rgba(1,18,28,255);
   font-family: "Roboto", sans-serif;
 }
 
@@ -24,7 +24,7 @@ body{
 .create{
   width: 50%;
   height: 60px;
-  background: rgb(14, 1, 44);
+  background: rgba(1,125,87,255);
   color: white;
   float: left;
   text-align: center;
@@ -33,7 +33,7 @@ body{
   text-transform: uppercase;
 }
 
-.form-inputs {
+#form-inputs {
   background-color: #fff;
   box-sizing: border-box;
   padding: 40px;
@@ -47,19 +47,20 @@ body{
   box-sizing: border-box;
   padding: 20px;
   margin-bottom: 15px;
-  border: 2px solid rgba(201, 85, 85, 0.733);
+  border: 2px solid rgba(245,97,30,255);
   font-size: 16px;
   outline:none;
 
 }
 
 .input.optional{
-  border: 2px solid rgba(192, 192, 46, 0.705);
+  border: 2px solid #fcb937;
 }
 
 .input:focus{
   border: 2px solid rgba(69, 1, 71, 0.541);
 }
+
 
 .btn{
   width: 100%;
