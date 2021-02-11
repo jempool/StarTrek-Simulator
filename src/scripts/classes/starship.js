@@ -71,7 +71,7 @@ class StarShip {
     this.el.style.visibility = visible ? 'visible' : 'hidden'
   }
 
-  play() {
+  play(channel) {
     this.timer = setInterval(()=> {
       const { go, direction } = this.state  
       if (go === 0 && direction === 0) return;
@@ -84,7 +84,7 @@ class StarShip {
       this.setPosition(x, y)
       this.setAngle(angle)
 
-      client.publish('teamName/topic1', { type: "Ship movement", id: ID, x: x, y: y, angle: angle })
+      client.publish(channel, { type: "Ship movement", id: ID, x: x, y: y, angle: angle })
     }, 1000/24)
   }
 

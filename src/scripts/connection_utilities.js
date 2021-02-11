@@ -1,4 +1,4 @@
-function resolveMessage(msj, ownID, ships, client) {
+function resolveMessage(msj, ownID, ships, client, channel) {
   switch(msj.type) {
       case "arrival":
         console.log("A new contender has just arrived!!!!")
@@ -10,7 +10,7 @@ function resolveMessage(msj, ownID, ships, client) {
           const batship = StarShip.create(galaxy, './assets/spaceship/batship.png', 'small batship', 200, 200, 45, msj.id)
           ships[msj.id] = batship
           console.log(msj.id)
-          client.publish('teamName/topic1', { type: "Existence notification", id: ID, x: ships[ID].x, y: ships[ID].y, angle: ships[ID].angle, sprite: SPRITEPATH, health: ships[ID].health, points: ships[ID].points })
+          client.publish(channel, { type: "Existence notification", id: ID, x: ships[ID].x, y: ships[ID].y, angle: ships[ID].angle, sprite: SPRITEPATH, health: ships[ID].health, points: ships[ID].points })
         }
         break;
       case "Existence notification":
@@ -36,6 +36,10 @@ function resolveMessage(msj, ownID, ships, client) {
           ships[msj.id].setHealth(msj.health)
           ships[msj.id].setPoints(msj.points) 
           updateUserStatusInDOM()
+        break;
+      case "roomCheck":
+          console.log("Room check")
+          client.publish(channel, { type: "Notify" })
         break;
 
       default:

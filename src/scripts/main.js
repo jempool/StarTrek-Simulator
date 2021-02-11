@@ -1,5 +1,5 @@
-let ROOM = "temp"
-const ID = Math.floor(Math.random() * 100)
+let ROOM = ''
+let ID = ''
 const NICKNAME = "SHA"
 const GENDER = "M"
 const SPRITEPATH = './assets/spaceship/batship.png'
@@ -19,17 +19,48 @@ const rabbitmqSettings = {
 
 async function connect(options) {
   try {
-    let test = "";
-    const client = await RsupMQTT.connect(options)
-    client.subscribe('teamName/topic1').on(message => {
+    let channel = 'teamName/topic'
+    channel += ROOM
 
+    const client = await RsupMQTT.connect(options)
+    client.subscribe(channel).on(message => {
       const msj = JSON.parse(message.string)
       
-      resolveMessage(msj, ID, ships, client)
+      resolveMessage(msj, ID, ships, client, channel)
 
     })
-    client.publish('teamName/topic1', { type: "arrival", id: ID })
+    client.publish(channel, { type: "arrival", id: ID })
     return client
+  } catch (error) {
+    console.log(error)
+  }
+
+}
+
+async function checkRoom(options, channel) {
+  try {
+    let response = false
+    const client = await RsupMQTT.connect(options)
+    
+    client.subscribe(channel).on(message => {
+      const msj = JSON.parse(message.string)
+      if(msj.type == "Notify"){
+        console.log("shar")
+        response = true
+      }
+
+    })
+    client.publish(channel, { type: "roomCheck" })
+
+    console.log("Checking room, please wait...")
+    
+    return new Promise(resolve => {
+      setTimeout(() => {
+        client.unsubscribe(channel)
+        resolve(response);
+      }, 2000);
+    });
+    
   } catch (error) {
     console.log(error)
   }
@@ -153,7 +184,7 @@ async function loadJoinRoom(){
   
 }
 
-async function loadGame(){
+async function loadGame(dataDict){
   document.getElementById('galaxy').style.display = "block"
   document.getElementById('formularies').style.display = "none"
   
@@ -167,17 +198,20 @@ async function loadGame(){
   //console.log('Creating USS Enterprise element')
   //const enterprise = StarShip.create(galaxy, './assets/spaceship/ussenterprise.png', 'ussenterprise', 1, 1, 90)
   //enterprise.play()
-  //enterprise.setState(1, 0) 
+  //enterprise.setState(1, 0)
+
+  let channel = 'teamName/topic'
+  channel += ROOM
 
   const batship = StarShip.create(galaxy, SPRITEPATH, 'small batship', 200, 200, 45, ID)
-  batship.play()
+  batship.play(channel)
   addKeyEvent(batship)
 
   ships[ID] = batship
   this.updateUserStatusInDOM()
 }
 
-function changeGameState(state){
+function changeGameState(state, dataDict){
   switch(state) {
     case "login":
       console.log("Changing to login configuration")
@@ -185,7 +219,7 @@ function changeGameState(state){
       break;
     case "game":
       console.log("Changing to game configuration")
-      loadGame()
+      loadGame(dataDict)
     }
 }
 
@@ -197,6 +231,8 @@ function getFormInfo(){
   const starship = document.getElementById('starship-name').innerHTML
   const teamIndex = document.getElementById('team')
   const team = teamIndex.options[teamIndex.selectedIndex].text
+  dataDict["ID"] = getRandomCode()
+  ID = dataDict["ID"]
   dataDict["nickName"] = nickName
   dataDict["gender"] = gender
   dataDict["starship"] = starship
@@ -216,14 +252,28 @@ function createRoom(){
   changeGameState("game")
 }
 
-function joinRoom(){
+async function joinRoom(){
   ROOM = document.getElementById('code').value
   let dataDict = getFormInfo();
 
   // console.log('Creating a player object')
   // const player = Player.create(roomCode, dataDict["nickName"], dataDict["gender"], dataDict["starship"], dataDict["team"], "soldier")
 
-  changeGameState("game")
+  let channel = 'teamName/topic'
+  channel += ROOM
+
+
+  const roomCheck = await checkRoom(rabbitmqSettings, channel)
+
+  console.log(roomCheck);
+
+  if( roomCheck ){
+    console.log('Check Room OK!')
+    changeGameState("game", dataDict)
+  } else {
+    console.log('No such room!')
+    changeGameState("login", dataDict)
+  }
 }
 
 async function main() {
