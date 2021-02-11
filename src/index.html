@@ -28,7 +28,13 @@
   <h1 class="title">Star Trek Simulator</h1>
   <noscript>Your browser does not support JavaScript!</noscript>
 
-  <div id='galaxy'></div>
+  <div id='id'></div>
+  <div id='health'></div>
+  <div id='points'></div>
+
+  <div id='galaxy'>
+    <a id="room_code"></a>
+  </div>
 
   <div id="formularies">
     <button class = "join" onclick="loadJoinRoom()"> Join Room </button>
@@ -40,21 +46,45 @@
         <option value="nonBinary">Non Binary</option>
         <option value="female">Female</option>
         <option value="male">Male</option>   
-      </select> <br />
-      <select name="starship" id = "starship" class="input optional">
-        <option value="enterprise">USS Entreprise</option>
-        <option value="miranda">Clase Miranda</option>
-        <option value="bird">Bird of Prey </option>
-        <option value="devisor">IKS Devisor </option>
-      </select> <br />
-      <select name="team" class="input optional" id ="team">
+      </select> 
+      <br />
+      <div class="custom-select-wrapper" id="starship-dropdown">
+        <div class="custom-select">
+            <div class="custom-select__trigger">
+              <span id="starship-name">Starship</span>
+              <div class="arrow"></div>
+            </div>
+            <div class="custom-options" id="starship-dropdown-options">
+                <span class="custom-option" data-value="USS Entreprise">
+                  <img src="./assets/spaceship/ussenterprise.png" height="80px" width="80px"></img>
+                  <a>USS Entreprise</a>
+                </span>
+                <span class="custom-option" data-value="Miranda">
+                  <img src="./assets/spaceship/battleship.png" height="80px" width="80px"></img>
+                  <a>Miranda</a>
+                </span>
+                <span class="custom-option" data-value="Bird of Prey">
+                  <img src="./assets/spaceship/spaceship.png" height="80px" width="80px"></img>
+                  <a>Bird of Prey</a>
+                </span>
+                <span class="custom-option" data-value="IKS Devisor">
+                  <img src="./assets/spaceship/batship.png" height="80px" width="80px"></img>
+                  <a>IKS Devisor</a>
+                </span>
+            </div>
+        </div>
+      </div>
+      <br />
+      <select name="team" class="input" id ="team">
         <option value="klingon">Klingon</option>
         <option value="federation">Federation</option>
-      </select> <br />
+      </select> 
+      <br />
       <div class = "join-box">
         <input name="code" id="code" class="input" type="text" placeholder="Game code">
       </div>
-      <button type="submit" class = "btn" onclick="joinRoom()"> Join! </button> 
+      <button type="submit" class = "btn" onclick="joinRoom()"> Join! </button>
+      <button type="submit" class = "btn" onclick="createRoom()"> Create! </button>  
     </div>
   </div>
 
