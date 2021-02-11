@@ -193,11 +193,10 @@ function getFormInfo(){
   dataDict = {}
   const nickName = document.getElementById('nickName').value
   const genderIndex = document.getElementById('gender')
-  const gender = genderIndex.options[genderIndex.selectedIndex].text;
-  const starShipIndex = document.getElementById('starship')
-  const starship = starShipIndex.options[starShipIndex.selectedIndex].text;
+  const gender = genderIndex.options[genderIndex.selectedIndex].text
+  const starship = document.getElementById('starship-name').innerHTML
   const teamIndex = document.getElementById('team')
-  const team = teamIndex.options[teamIndex.selectedIndex].text;
+  const team = teamIndex.options[teamIndex.selectedIndex].text
   dataDict["nickName"] = nickName
   dataDict["gender"] = gender
   dataDict["starship"] = starship
