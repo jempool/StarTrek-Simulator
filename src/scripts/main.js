@@ -96,6 +96,33 @@ async function loadLogin(){
   const create_btn = document.getElementsByClassName('create')[0]
   create_btn.style.background = "none"
   create_btn.style.color = "rgb(52, 52, 52)"
+
+  addStarshipEventListeners()
+  // Close all dropdowns when selected element is outside
+  window.addEventListener('click', function(e) {
+    for (const select of document.querySelectorAll('.custom-select')) {
+      if (!select.contains(e.target)) {
+          select.classList.remove('open');
+      }
+    }
+  });
+}
+
+function addStarshipEventListeners(){
+  // Get the starship dropdown wrapper
+  const starShipDropDown = document.getElementById('starship-dropdown')
+  starShipDropDown.addEventListener('click', function(event) {
+    this.querySelector('.custom-select').classList.toggle('open');
+  })
+
+  // Get the starship dropdown options
+  const starShipDropDownOptions = document.getElementById('starship-dropdown-options')
+  starShipDropDown.addEventListener('click', function(event) {
+    if (event.target.nodeName == "SPAN"){
+      let name = document.getElementById('starship-name')
+      name.innerHTML = event.target.getAttribute("data-value")
+    }
+  })
 }
 
 async function loadCreateRoom(){
