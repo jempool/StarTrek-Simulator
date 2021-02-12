@@ -14,6 +14,7 @@ class StarShip {
     this.id = id
     this.health = 100
     this.points = 0
+
     // this.id = StarShip.id
     // StarShip.id ++
     StarShip.players.push(this)
@@ -71,6 +72,8 @@ class StarShip {
     this.el.style.visibility = visible ? 'visible' : 'hidden'
   }
 
+ 
+
   play(channel) {
     this.timer = setInterval(()=> {
       const { go, direction } = this.state  
@@ -83,9 +86,22 @@ class StarShip {
   
       this.setPosition(x, y)
       this.setAngle(angle)
+      this.showLeaderBoard()
 
       client.publish(channel, { type: "Ship movement", id: ID, x: x, y: y, angle: angle })
     }, 1000/24)
+  }
+
+  showLeaderBoard(){
+    const ships_dom = document.getElementsByClassName(this.el.className)
+    const parent = document.getElementById("leaderboard")
+    for (const ship of ships_dom) {
+      let element = document.createElement("P")
+      let node = document.createTextNode(`${ships[ship.id].id}, ${ships[ship.id].health}, ${ships[ship.id].points}`)
+      element.appendChild(node)
+      parent.appendChild(element)
+      console.log(ships[ship.id])
+    }
   }
 
   
@@ -93,6 +109,7 @@ class StarShip {
     const img = document.createElement('img')
     img.className = `starship ${extraClass}`
     img.src = imagePath
+    img.id = id
     parent.appendChild(img)
    
     return new StarShip(img, x, y, angle, id)

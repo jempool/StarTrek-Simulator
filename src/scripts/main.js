@@ -1,10 +1,10 @@
-let ROOM = ''
-let ID = ''
-const NICKNAME = "SHA"
-const GENDER = "M"
-const SPRITEPATH = './assets/spaceship/batship.png'
-const TEAM = "1"
-let channel = 'teamName/topic'
+  let ROOM = ''
+  let ID = ''
+  // const NICKNAME = "SHA"
+  const GENDER = "M"
+  const SPRITEPATH = './assets/spaceship/batship.png'
+  const TEAM = "1"
+  let channel = 'teamName/topic'
 
 let galaxy = {}
 let ships = {}
@@ -95,7 +95,7 @@ function addKeyEvent(batship) {
 
 // This function updates the user's information in the DOM.
 function updateUserStatusInDOM() {
-  document.getElementById('id').innerHTML = `<strong>Id </strong>${ID}`
+  // document.getElementById('id').innerHTML = `<strong>Id </strong>${ID}`
   document.getElementById('health').innerHTML = `<strong>Health </strong>${ships[ID].health}`
   document.getElementById('points').innerHTML = `<strong>Points </strong>${ships[ID].points}`
 }
