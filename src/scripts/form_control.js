@@ -74,35 +74,6 @@ async function checkRoom(options, channel) {
 }
 
 
-function loadCreateRoom(){
-
-    document.getElementsByClassName('join-box')[0].style.display = "none"
-    document.getElementsByClassName('create-box')[0].style.display = "block"
-
-    const create_btn = document.getElementsByClassName('create')[0]
-    create_btn.style.background = "rgba(1,125,87,255)"
-    create_btn.style.color = "white" 
-  
-    const join_btn = document.getElementsByClassName('join')[0]
-    join_btn.style.background = "none"
-    join_btn.style.color = "rgb(52, 52, 52)"
-
-    
-  }
-  
-function loadJoinRoom(){
-  
-    document.getElementsByClassName('join-box')[0].style.display = "block"
-    document.getElementsByClassName('create-box')[0].style.display = "none"
-    const join_btn = document.getElementsByClassName('join')[0]
-    join_btn.style.background = "rgba(1,125,87,255)"
-    join_btn.style.color = "white" 
-  
-    const create_btn = document.getElementsByClassName('create')[0]
-    create_btn.style.background = "none"
-    create_btn.style.color = "rgb(52, 52, 52)"
-    
-}
 
 function checkNickName(){
   const nicknameInput = document.getElementsByClassName("input")[0]
@@ -148,4 +119,37 @@ function checkFormularie(is_join){
   }
   console.log(messages.join("\n")) */
 
+}
+
+
+function loadCreateRoom(){
+
+    document.getElementsByClassName('join-box')[0].style.display = "none"
+    document.getElementsByClassName('create-box')[0].style.display = "block"
+    document.getElementById('code').style.visibility = "hidden"
+
+    const create_btn = document.getElementsByClassName('create')[0]
+    create_btn.style.background = "rgba(1,125,87,255)"
+    create_btn.style.color = "white" 
+  
+    const join_btn = document.getElementsByClassName('join')[0]
+    join_btn.style.background = "none"
+    join_btn.style.color = "rgb(52, 52, 52)"
+
+    
+  }
+  
+function loadJoinRoom(){
+  
+    document.getElementsByClassName('join-box')[0].style.display = "block"
+    document.getElementsByClassName('create-box')[0].style.display = "none"
+    document.getElementById('code').style.visibility = "visible"
+    const join_btn = document.getElementsByClassName('join')[0]
+    join_btn.style.background = "rgba(1,125,87,255)"
+    join_btn.style.color = "white" 
+  
+    const create_btn = document.getElementsByClassName('create')[0]
+    create_btn.style.background = "none"
+    create_btn.style.color = "rgb(52, 52, 52)"
+    
 }

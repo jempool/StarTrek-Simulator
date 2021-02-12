@@ -81,8 +81,10 @@
         <option value="federation">Federation</option>
       </select> 
       <br />
+      
+      <input name="code" id="code" class="input" type="text" placeholder="Game code" onblur="checkCode()">
+
       <div class = "join-box">
-        <input name="code" id="code" class="input" type="text" placeholder="Game code" onblur="checkCode()">
         <button type="submit" class = "btn" onclick="joinRoom()"> Join! </button>
       </div>
 
