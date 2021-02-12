@@ -44,7 +44,7 @@ function resolveMessage(msj, ownID, ships, client, channel) {
       case "Bullets movement":
         if(msj.id != ownID) {
           const bullet = Bullet.create(galaxy, './assets/spaceship/bullet.png', 
-          msj.x, msj.y, msj.angle, msj.bulletId)
+          msj.x, msj.y, msj.angle, msj.bulletId, true)
           bullet.play()
           bullet.setState(1, 0)
           console.log({ id: msj.id, x: msj.x, y: msj.y, angle: msj.angle, bulletId: msj.bulletId })
