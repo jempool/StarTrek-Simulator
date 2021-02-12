@@ -95,7 +95,7 @@ function addKeyEvent(batship) {
       if(!lockedShot){
         const bulletId = Date.now()
         const bullet = Bullet.create(galaxy, './assets/spaceship/bullet.png', 
-        batship.getX(), batship.getY(), batship.getAngle(), bulletId)
+        batship.getX(), batship.getY(), batship.getAngle(), bulletId, false)
         bullet.play()
         bullet.setState(1, 0)
         lockedShot = true

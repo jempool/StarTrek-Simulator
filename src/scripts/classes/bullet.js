@@ -1,5 +1,5 @@
 class Bullet {
-  constructor(el, x = 0, y = 0, angle = 0, id) {
+  constructor(el, x = 0, y = 0, angle = 0, id, fakeBullet) {
     this.el = el
     this.setState()
     this.setAngle(angle)
@@ -10,7 +10,7 @@ class Bullet {
     this.width = document.getElementsByClassName(this.el.className)[0].width
     this.height = document.getElementsByClassName(this.el.className)[0].height
     this.radio = this.height/2
- 
+    this.fakeBullet = fakeBullet // true/false
   }
 
   setState(go = 0, direction = 0) {
@@ -81,7 +81,7 @@ class Bullet {
           this.stop() // Detiene la bala
           this.setPosition(0,0)
 
-          if(ID != player.id) // not to shoot myself!
+          if(ID != player.id && !this.fakeBullet) // not to shoot myself!
             this.updatePointsAndHealth (ID, player.id)
 
         } 
@@ -117,7 +117,7 @@ class Bullet {
     clearInterval(this.timer)
   }
 
-  static create(parent, imagePath, x = 0, y = 0, angle = 0, id) {
+  static create(parent, imagePath, x = 0, y = 0, angle = 0, id, fakeBullet) {
 
     // "time-to-live" of the bullet
     const ttl = setInterval(() => {      
@@ -132,7 +132,7 @@ class Bullet {
     img.id = id
     img.src = imagePath
     parent.appendChild(img)
-    return new Bullet(img, x, y, angle, id)
+    return new Bullet(img, x, y, angle, id, fakeBullet)
 
   }
 }
