@@ -80,9 +80,15 @@ class Bullet {
           this.setVisibility(false)
           this.stop() // Detiene la bala
           this.setPosition(0,0)
-
-          if(ID != player.id && !this.fakeBullet) // not to shoot myself!
-            this.updatePointsAndHealth (ID, player.id)
+          
+          // Calculating points and health after collision
+          if(
+            ID != player.id // isn't myself
+            && !this.fakeBullet // it's a real bullet
+            && ships[ID] != undefined // the shooter still alive
+            && ships[player.id] != undefined){ // the target still alive
+              this.updatePointsAndHealth (ID, player.id)
+            }
 
         } 
       }

@@ -83,38 +83,39 @@ function addKeyEvent(batship) {
   let lockedShot = false
 
   document.body.addEventListener('keydown', (e) => {
-    if (up.indexOf(e.key) >= 0) batship.setState(1, batship.state.direction)
-    if (down.indexOf(e.key) >= 0) batship.setState(-1, batship.state.direction)
-    if (left.indexOf(e.key) >= 0) batship.setState(batship.state.go, -1)
-    if (right.indexOf(e.key) >= 0) batship.setState(batship.state.go, 1)
-
-    if (stop.indexOf(e.key) >= 0) batship.setState(0, 0)
-
-    if (space.indexOf(e.key) >= 0) {
-
-      if(!lockedShot){
-        const bulletId = Date.now()
-        const bullet = Bullet.create(galaxy, './assets/spaceship/bullet.png', 
-        batship.getX(), batship.getY(), batship.getAngle(), bulletId, false)
-        bullet.play()
-        bullet.setState(1, 0)
-        lockedShot = true
-        setTimeout(() => {
-          lockedShot = false
-        }, 200);
-
-      // broadcast the bullet movement to the other players
-      client.publish(channel, { 
-        type: "Bullets movement", 
-        id: ID, 
-        bulletId: bulletId + ID, 
-        x: ships[ID].x,
-        y: ships[ID].y,  
-        angle: ships[ID].angle })
-      } 
-      
-    }
-  })
+    if(ships[ID] != undefined) {
+      if (up.indexOf(e.key) >= 0) batship.setState(1, batship.state.direction)
+      if (down.indexOf(e.key) >= 0) batship.setState(-1, batship.state.direction)
+      if (left.indexOf(e.key) >= 0) batship.setState(batship.state.go, -1)
+      if (right.indexOf(e.key) >= 0) batship.setState(batship.state.go, 1)
+  
+      if (stop.indexOf(e.key) >= 0) batship.setState(0, 0)
+  
+      if (space.indexOf(e.key) >= 0) {
+  
+        if(!lockedShot){
+          const bulletId = Date.now()
+          const bullet = Bullet.create(galaxy, './assets/spaceship/bullet.png', 
+          batship.getX(), batship.getY(), batship.getAngle(), bulletId, false)
+          bullet.play()
+          bullet.setState(1, 0)
+          lockedShot = true
+          setTimeout(() => {
+            lockedShot = false
+          }, 200);
+  
+        // broadcast the bullet movement to the other players
+        client.publish(channel, { 
+          type: "Bullets movement", 
+          id: ID, 
+          bulletId: bulletId + ID, 
+          x: ships[ID].x,
+          y: ships[ID].y,  
+          angle: ships[ID].angle })
+        } 
+    }      
+  }
+})
 
   document.body.addEventListener('keyup', (e) => {
     if (go.indexOf(e.key) >= 0) batship.setState(0, batship.state.direction)
@@ -125,9 +126,20 @@ function addKeyEvent(batship) {
 
 // This function updates the user's information in the DOM.
 function updateUserStatusInDOM() {
-  document.getElementById('id').innerHTML = `<strong>Id </strong>${ID}`
-  document.getElementById('health').innerHTML = `<strong>Health </strong>${ships[ID].health}`
-  document.getElementById('points').innerHTML = `<strong>Points </strong>${ships[ID].points}`
+  document.getElementById('id').innerHTML = `<strong>Id: </strong>${ID}`
+  document.getElementById('lives').innerHTML = `<strong>Lives: </strong>${ships[ID].lives}`
+  document.getElementById('health').innerHTML = `<strong>Health: </strong>${ships[ID].health}`
+  document.getElementById('points').innerHTML = `<strong>Points: </strong>${ships[ID].points}`
+  
+  for (const [key, value] of Object.entries(ships)) {
+    if(ships[key].lives === 0){
+      delete ships[key]
+      console.log(`${key}: ${value}`)
+    }
+    
+  }
+
+  
 }
 
 async function loadLogin(){

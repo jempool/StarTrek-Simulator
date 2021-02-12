@@ -249,3 +249,13 @@ img.bullet {
     display: block;
   }
 } */
+
+/* Remove this style when the old "game over" message is removed  */
+#status {
+  font-family: bold;
+  color: red;
+  font-size: 30px;
+  padding-left: 10px;
+  margin-top: 200px;
+  position: absolute;
+}
