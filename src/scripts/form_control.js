@@ -77,7 +77,7 @@ async function checkRoom(options, channel) {
 
 function checkNickName(){
   const nicknameInput = document.getElementsByClassName("input")[0]
-  if(nicknameInput.value === "" || nicknameInput.value === null){
+  if(nicknameInput.value.length === "" || nicknameInput.value === null){
     // messages.push("Nickname is required.")
     nicknameInput.style.border = "2px solid red"
     return false
@@ -95,7 +95,7 @@ function checkNickName(){
 
 function checkCode(){
   const codeInput = document.getElementById("code");
-  if(codeInput.value === "" || codeInput.value === null){
+  if(codeInput.value.length !== 5 || codeInput.value === null){
     //messages.push("Provide a game code or create a new room.")
     codeInput.style.border = "2px solid red"
     return false
