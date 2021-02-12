@@ -38,36 +38,6 @@ async function connect(options) {
 
 }
 
-async function checkRoom(options, channel) {
-  try {
-    let response = false
-    const client = await RsupMQTT.connect(options)
-    
-    client.subscribe(channel).on(message => {
-      const msj = JSON.parse(message.string)
-      if(msj.type == "Notify"){
-        console.log("shar")
-        response = true
-      }
-
-    })
-    client.publish(channel, { type: "roomCheck" })
-
-    console.log("Checking room, please wait...")
-    
-    return new Promise(resolve => {
-      setTimeout(() => {
-        client.unsubscribe(channel)
-        resolve(response);
-      }, 2000);
-    });
-    
-  } catch (error) {
-    console.log(error)
-  }
-
-}
-
 
 function addKeyEvent(batship) {
   const up = ['w', 'ArrowUp']
@@ -133,6 +103,7 @@ function updateUserStatusInDOM() {
 async function loadLogin(){
   document.getElementById('galaxy').style.display = "none"
   document.getElementById('formularies').style.display = "block"
+  document.getElementsByClassName('create-box')[0].style.display = "none"
 
   const create_btn = document.getElementsByClassName('create')[0]
   create_btn.style.background = "none"
@@ -166,33 +137,6 @@ function addStarshipEventListeners(){
   })
 }
 
-async function loadCreateRoom(){
-
-  document.getElementsByClassName('join-box')[0].style.display = "none"
-
-  const create_btn = document.getElementsByClassName('create')[0]
-  create_btn.style.background = "rgb(14, 1, 44)"
-  create_btn.style.color = "white" 
-
-  const join_btn = document.getElementsByClassName('join')[0]
-  join_btn.style.background = "none"
-  join_btn.style.color = "rgb(52, 52, 52)"
-  
-}
-
-async function loadJoinRoom(){
-
-  document.getElementsByClassName('join-box')[0].style.display = "block"
-
-  const join_btn = document.getElementsByClassName('join')[0]
-  join_btn.style.background = "rgb(14, 1, 44)"
-  join_btn.style.color = "white" 
-
-  const create_btn = document.getElementsByClassName('create')[0]
-  create_btn.style.background = "none"
-  create_btn.style.color = "rgb(52, 52, 52)"
-  
-}
 
 async function loadGame(dataDict){
   document.getElementById('galaxy').style.display = "block"
@@ -250,41 +194,8 @@ function getFormInfo(){
   return dataDict
 }
 
-function createRoom(){
-  console.log('Generating room code')
-  ROOM = getLetterRandomCode()
-  console.log("Room code: " + ROOM)
-  let dataDict = getFormInfo();
-
-  // console.log('Creating a player object')
-  // const player = Player.create(roomCode, dataDict["nickName"], dataDict["gender"], dataDict["starship"], dataDict["team"], "captain")
-
-  changeGameState("game")
-}
-
-async function joinRoom(){
-  ROOM = document.getElementById('code').value
-  let dataDict = getFormInfo();
-
-  // console.log('Creating a player object')
-  // const player = Player.create(roomCode, dataDict["nickName"], dataDict["gender"], dataDict["starship"], dataDict["team"], "soldier")
-
-  let channel = 'teamName/topic'
-  channel += ROOM
 
 
-  const roomCheck = await checkRoom(rabbitmqSettings, channel)
-
-  console.log(roomCheck);
-
-  if( roomCheck ){
-    console.log('Check Room OK!')
-    changeGameState("game", dataDict)
-  } else {
-    console.log('No such room!')
-    changeGameState("login", dataDict)
-  }
-}
 
 async function main() {
   console.log('Welcome to our Star Trek Simulator!')
