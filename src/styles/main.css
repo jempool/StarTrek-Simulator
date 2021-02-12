@@ -160,14 +160,14 @@ body{
   box-sizing: border-box;
   padding: 20px;
   margin-bottom: 15px;
-  border: 2px solid rgba(245,97,30,255);
+  border: 2px solid rgba(255, 255, 0, 0.897);
   font-size: 16px;
   outline:none;
 
 }
 
 .input.optional{
-  border: 2px solid #fcb937;
+  border: 2px solid rgb(14, 1, 44);
 }
 
 .input:focus{
@@ -214,6 +214,7 @@ img.bullet {
   width: 5px;
   height: 20px;
 }
+
 
 
 /* 

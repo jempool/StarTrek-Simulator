@@ -1,20 +1,77 @@
-
+/* 
 const nicknameinput = document.getElementById("nickName")
 const code = document.getElementById("code");
-console.log(nicknameinput) 
+console.log(nicknameinput)  */
 
 
+function createRoom(){
+  if (!checkFormularie()) return
+  console.log('Generating room code')
+  ROOM = getLetterRandomCode()
+  console.log("Room code: " + ROOM)
+  let dataDict = getFormInfo();
 
+  // console.log('Creating a player object')
+  // const player = Player.create(roomCode, dataDict["nickName"], dataDict["gender"], dataDict["starship"], dataDict["team"], "captain")
 
-function joinRoom(){
-  const roomCode = document.getElementById('code').value
+  changeGameState("game")
+}
+
+async function joinRoom(){
+  ROOM = document.getElementById('code').value
   let dataDict = getFormInfo();
 
   // console.log('Creating a player object')
   // const player = Player.create(roomCode, dataDict["nickName"], dataDict["gender"], dataDict["starship"], dataDict["team"], "soldier")
-  if(checkFormularie(dataDict)) changeGameState("game")
+
+  let channel = 'teamName/topic'
+  channel += ROOM
+
+  if (!checkFormularie(true)) return
+
+  const roomCheck = await checkRoom(rabbitmqSettings, channel)
+
+  console.log(roomCheck);
+
+  if( roomCheck ){
+    console.log('Check Room OK!')
+    changeGameState("game", dataDict)
+  } else {
+    console.log('Wrong code, no such room!')
+    changeGameState("login", dataDict)
+  }
 }
 
+
+async function checkRoom(options, channel) {
+  try {
+    let response = false
+    const client = await RsupMQTT.connect(options)
+    
+    client.subscribe(channel).on(message => {
+      const msj = JSON.parse(message.string)
+      if(msj.type == "Notify"){
+        console.log("shar")
+        response = true
+      }
+
+    })
+    client.publish(channel, { type: "roomCheck" })
+
+    console.log("Checking room, please wait...")
+    
+    return new Promise(resolve => {
+      setTimeout(() => {
+        client.unsubscribe(channel)
+        resolve(response);
+      }, 2000);
+    });
+    
+  } catch (error) {
+    console.log(error)
+  }
+
+}
 
 
 function loadCreateRoom(){
@@ -47,31 +104,48 @@ function loadJoinRoom(){
     
 }
 
-function checkFormularie(){
+function checkNickName(){
   const nicknameInput = document.getElementsByClassName("input")[0]
-  const codeInput = document.getElementById("code");
-  let messages = []
-  console.log(nicknameInput.value)
   if(nicknameInput.value === "" || nicknameInput.value === null){
-    messages.push("Nickname is required.")
-    nicknameInput.style.border = "2px solid rgba(245,97,30,255)"
+    // messages.push("Nickname is required.")
+    nicknameInput.style.border = "2px solid red"
+    return false
   }else{
-    if(nicknameInput.value.length < 5){
-      messages.push("Nickname must have at least 5 characters.")
-      nicknameInput.style.border = "2px solid rgba(245,97,30,255)"
+    if(nicknameInput.value.length < 4){
+      // messages.push("Nickname must have at least 4 characters.")
+      nicknameInput.style.border = "2px solid red"
+      return false
     }else{
       nicknameInput.style.border = "2px solid rgba(1,125,87,255)"
+      return true
     }
   }
+}
 
+function checkCode(){
+  const codeInput = document.getElementById("code");
   if(codeInput.value === "" || codeInput.value === null){
-    messages.push("Provide a game code or create a new room.")
+    //messages.push("Provide a game code or create a new room.")
+    codeInput.style.border = "2px solid red"
+    return false
   }
+  codeInput.style.border = "2px solid rgba(1,125,87,255)"
+  return true
+}
 
+function checkFormularie(is_join){
+  
+  //let messages = []
+  if (is_join) {
+    const correctcode = checkCode()
+    if(correctcode === false) return false
+  }
+  return checkNickName()
+
+/* 
   if (messages.length === 0){
     return true
   }
+  console.log(messages.join("\n")) */
 
-  console.log(messages.join("\n"))
-  return false
 }

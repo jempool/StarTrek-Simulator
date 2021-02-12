@@ -37,36 +37,6 @@ async function connect(options) {
 
 }
 
-async function checkRoom(options, channel) {
-  try {
-    let response = false
-    const client = await RsupMQTT.connect(options)
-    
-    client.subscribe(channel).on(message => {
-      const msj = JSON.parse(message.string)
-      if(msj.type == "Notify"){
-        console.log("shar")
-        response = true
-      }
-
-    })
-    client.publish(channel, { type: "roomCheck" })
-
-    console.log("Checking room, please wait...")
-    
-    return new Promise(resolve => {
-      setTimeout(() => {
-        client.unsubscribe(channel)
-        resolve(response);
-      }, 2000);
-    });
-    
-  } catch (error) {
-    console.log(error)
-  }
-
-}
-
 
 function addKeyEvent(batship) {
   const up = ['w', 'ArrowUp']
@@ -158,7 +128,6 @@ function addStarshipEventListeners(){
 }
 
 
-
 async function loadGame(dataDict){
   document.getElementById('galaxy').style.display = "block"
   document.getElementById('formularies').style.display = "none"
@@ -215,41 +184,8 @@ function getFormInfo(){
   return dataDict
 }
 
-function createRoom(){
-  console.log('Generating room code')
-  ROOM = getLetterRandomCode()
-  console.log("Room code: " + ROOM)
-  let dataDict = getFormInfo();
-
-  // console.log('Creating a player object')
-  // const player = Player.create(roomCode, dataDict["nickName"], dataDict["gender"], dataDict["starship"], dataDict["team"], "captain")
-
-  changeGameState("game")
-}
-
-async function joinRoom(){
-  ROOM = document.getElementById('code').value
-  let dataDict = getFormInfo();
-
-  // console.log('Creating a player object')
-  // const player = Player.create(roomCode, dataDict["nickName"], dataDict["gender"], dataDict["starship"], dataDict["team"], "soldier")
-
-  let channel = 'teamName/topic'
-  channel += ROOM
 
 
-  const roomCheck = await checkRoom(rabbitmqSettings, channel)
-
-  console.log(roomCheck);
-
-  if( roomCheck ){
-    console.log('Check Room OK!')
-    changeGameState("game", dataDict)
-  } else {
-    console.log('No such room!')
-    changeGameState("login", dataDict)
-  }
-}
 
 async function main() {
   console.log('Welcome to our Star Trek Simulator!')

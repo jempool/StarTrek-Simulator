@@ -41,7 +41,8 @@
     <button class = "create" onclick="loadCreateRoom()"> Create Room </button>
 
     <div id="form-inputs">
-      <input name="nickName" id="nickName" class="input" type="text" placeholder="Nickname" onblur="//alert('a')"> <br />
+      <input name="nickName" id="nickName" class="input" type="text" placeholder="Nickname" onblur="checkNickName()"> 
+
       <select name="gender" id ="gender" class="input optional">
         <option value="nonBinary">Non Binary</option>
         <option value="female">Female</option>
@@ -75,13 +76,13 @@
         </div>
       </div>
       <br />
-      <select name="team" class="input" id ="team">
+      <select name="team" class="input optional" id ="team">
         <option value="klingon">Klingon</option>
         <option value="federation">Federation</option>
       </select> 
       <br />
       <div class = "join-box">
-        <input name="code" id="code" class="input" type="text" placeholder="Game code">
+        <input name="code" id="code" class="input" type="text" placeholder="Game code" onblur="checkCode()">
         <button type="submit" class = "btn" onclick="joinRoom()"> Join! </button>
       </div>
 
@@ -92,10 +93,9 @@
     </div>
   </div>
 
-  <script src="./scripts/form_control.js"></script>
 
 </body>
-
+<script src="./scripts/form_control.js"></script>
 
 </html>
 
