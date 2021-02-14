@@ -95,9 +95,11 @@ function addKeyEvent(batship) {
 
 // This function updates the user's information in the DOM.
 function updateUserStatusInDOM() {
-  // document.getElementById('id').innerHTML = `<strong>Id </strong>${ID}`
+  document.getElementById('id').innerHTML = `<strong>Id </strong>${ID}`
   document.getElementById('health').innerHTML = `<strong>Health </strong>${ships[ID].health}`
   document.getElementById('points').innerHTML = `<strong>Points </strong>${ships[ID].points}`
+
+  addLeaderBoard()
 }
 
 async function loadLogin(){
@@ -158,11 +160,12 @@ async function loadGame(dataDict){
   channel += ROOM
 
   const batship = StarShip.create(galaxy, SPRITEPATH, 'small batship', 200, 200, 45, ID)
+  batship.add
   batship.play(channel)
   addKeyEvent(batship)
 
   ships[ID] = batship
-  this.updateUserStatusInDOM()
+
 }
 
 function changeGameState(state, dataDict){
@@ -194,8 +197,43 @@ function getFormInfo(){
   return dataDict
 }
 
+function addLeaderBoard(){
+  const parent = document.getElementById("leaderboard")
+  for (let [key, ship] of Object.entries(ships)) {
+    if (!document.getElementById(`p+${key}`)) {
+      let element = document.createElement("p")
+      element.id =  `p+${key}`
+      let node = document.createTextNode(`${ship.id}, ${ship.points}`)
+      element.appendChild(node)
+      parent.appendChild(element)
+    }else{
+      document.getElementById(`p+${key}`).innerHTML = `${ship.id}, ${ship.points}`
+      orderLearBoard()
+    }
+  }
+}
 
+function orderLearBoard(){
+  const parent = document.getElementById("leaderboard")
+  const elements = parent.childNodes
+  let j = 0
+  while(j < elements.length){
+    let min;
+    for (let i = j; i < elements.length; i++) {
+      const element = elements[i];
+      if (i == j){
+        min = element 
+      }else{
+        if (ships[element.id.slice(2)].points < ships[min.id.slice(2)].points ){
+          min = element
+        }
+      }
+    }
+    parent.appendChild(min);
+    j++
+  }
 
+}
 
 async function main() {
   console.log('Welcome to our Star Trek Simulator!')
