@@ -91,8 +91,8 @@ class Bullet {
 
   updatePointsAndHealth (myId, enemyId){    
     console.log(`Yo #${myId} le di a #${enemyId}`)
-    ships[myId].points += 1
-    ships[enemyId].health -= 1    
+    ships[myId].points += 10
+    ships[enemyId].health -= 25 
     
     // 'Shooter' status after shooting
     client.publish(channel, { 
