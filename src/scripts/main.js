@@ -134,7 +134,7 @@ function addStarshipEventListeners(){
 
   // Get the starship dropdown options
   const starShipDropDownOptions = document.getElementById('starship-dropdown-options')
-  starShipDropDown.addEventListener('click', function(event) {
+  starShipDropDownOptions.addEventListener('click', function(event) {
     if (event.target.nodeName == "SPAN"){
       let name = document.getElementById('starship-name')
       name.innerHTML = event.target.getAttribute("data-value")
