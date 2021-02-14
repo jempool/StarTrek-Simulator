@@ -80,19 +80,19 @@ class Bullet {
           this.setVisibility(false)
           this.stop() // Detiene la bala
           this.setPosition(0,0)
-
-          if(ID != player.id && !this.fakeBullet) // not to shoot myself!
+          // Check if the bullet was from my own team
+          if(players[player.id].team != TEAM && !this.fakeBullet){ 
             this.updatePointsAndHealth (ID, player.id)
-
+          }
         } 
-      }
-      )},250)
-}
+      })
+    },250)
+  }
 
   updatePointsAndHealth (myId, enemyId){    
     console.log(`Yo #${myId} le di a #${enemyId}`)
     ships[myId].points += 10
-    ships[enemyId].health -= 25    
+    ships[enemyId].health -= 25 
     
     // 'Shooter' status after shooting
     client.publish(channel, { 
