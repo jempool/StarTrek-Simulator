@@ -188,14 +188,26 @@ body{
   margin-bottom: 30px;
 }
 
-div#galaxy {
+#galaxy {
   position: relative;
-  width: 100%;
+  width: 99%;
   height: 500px;
   border-radius: 10px;
-  border: 1px dashed rgba(52, 52, 52, 0.673);
+  border: 1px solid white;
   display: block;
+  margin: 20px auto;
 }
+
+#leaderboard{
+  position: float;
+  width: 10%;
+  height: 500px;
+  border-radius: 5px;
+  border: 1px solid white;
+  float: right;
+  font-size: 14px;
+}
+
 
 img.starship {
   width: 200px;

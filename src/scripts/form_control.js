@@ -94,7 +94,7 @@ function checkNickName(){
 }
 
 function checkCode(){
-  const codeInput = document.getElementById("code");
+  const codeInput = document.getElementById("code")
   if(codeInput.value.length !== 5 || codeInput.value === null){
     //messages.push("Provide a game code or create a new room.")
     codeInput.style.border = "2px solid red"

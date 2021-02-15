@@ -31,12 +31,11 @@ class Bullet {
     } else {
     
 
-      const window_width= document.getElementById('galaxy').clientWidth
+      const window_width= document.getElementById('galaxy').clientWidth - document.getElementById('leaderboard').clientWidth
       const window_height= document.getElementById('galaxy').clientHeight
 
       if (x <= 0) x = window_width -(this.width+1);
       if (x +this.width >= window_width) x = 0;
-
       if (y <= 0) y = window_height -(this.height+1);
       if (y +this.height >= window_height) y=0;
       

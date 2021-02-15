@@ -114,6 +114,8 @@ function updateUserStatusInDOM() {
       console.log(`${key}: ${value}`)
     }    
   }
+
+  addLeaderBoard()
 }
 
 async function loadLogin(){
@@ -171,6 +173,7 @@ async function loadGame(dataDict){
   channel += ROOM
 
   const batship = StarShip.create(galaxy, SPRITEPATH, 'small batship', 200, 200, 45, ID)
+  batship.add
   batship.play(channel)
   addKeyEvent(batship)
 
@@ -213,8 +216,50 @@ function getFormInfo(){
   return dataDict
 }
 
+function addLeaderBoard(){
+  const parent = document.getElementById("leaderboard")
+  for (let [key, ship] of Object.entries(ships)) {
+    if (!document.getElementById(`p+${key}`)) {
+      let element = document.createElement("p")
+      element.id =  `p+${key}`
+      const nick = players[ship.id].nickName
+      const team = players[ship.id].team
+      let node = document.createTextNode(`${nick}, ${ship.points}`)
+      element.appendChild(node)
+      parent.appendChild(element)
+      if (team == "Klingon"){
+        element.style.border = "1px solid rgb(3, 80, 26)";
+      } else{
+        element.style.border = "1px solid gold";
+      }
+    }else{
+      document.getElementById(`p+${key}`).innerHTML = `${players[ship.id].nickName}, ${ship.points}`
+      orderLeaderBoard()
+    }
+  }
+}
 
+function orderLeaderBoard(){
+  const parent = document.getElementById("leaderboard")
+  const elements = parent.childNodes
+  let j = elements.length
+  while(j > 0){
+    let max;
+    for (let i = 0; i < j; i++) {
+      const element = elements[i];
+      if (i == 0){
+        max = element 
+      }else{
+        if (ships[element.id.slice(2)].points > ships[max.id.slice(2)].points){
+          max = element
+        }
+      }
+    }
+    parent.appendChild(max);
+    j--
+  }
 
+}
 
 async function main() {
   console.log('Welcome to our Star Trek Simulator!')
