@@ -1,13 +1,14 @@
 let ROOM = ''
 let ID = ''
-const NICKNAME = "SHA"
+let NICKNAME = "SHA"
 const GENDER = "M"
 const SPRITEPATH = './assets/spaceship/batship.png'
-const TEAM = "1"
+let TEAM = "1"
 let channel = 'teamName/topic'
 
 let galaxy = {}
 let ships = {}
+let players = {}
 
 const rabbitmqSettings = {
   username: 'admin',
@@ -27,10 +28,10 @@ async function connect(options) {
     client.subscribe(channel).on(message => {
       const msj = JSON.parse(message.string)
       
-      resolveMessage(msj, ID, ships, client, channel)
+      resolveMessage(msj, ID, ships, client, channel, players)
 
     })
-    client.publish(channel, { type: "arrival", id: ID })
+    client.publish(channel, { type: "arrival", id: ID, sprite: SPRITEPATH, team: TEAM, nickname: NICKNAME})
     return client
   } catch (error) {
     console.log(error)
@@ -81,11 +82,14 @@ function addKeyEvent(batship) {
           bulletId: bulletId + ID, 
           x: ships[ID].x,
           y: ships[ID].y,  
-          angle: ships[ID].angle })
+          angle: ships[ID].angle,
+          team: TEAM
+        })
         } 
     }      
   }
 })
+
 
   document.body.addEventListener('keyup', (e) => {
     if (go.indexOf(e.key) >= 0) batship.setState(0, batship.state.direction)
@@ -100,16 +104,16 @@ function updateUserStatusInDOM() {
   document.getElementById('lives').innerHTML = `<strong>Lives: </strong>${ships[ID].lives}`
   document.getElementById('health').innerHTML = `<strong>Health: </strong>${ships[ID].health}`
   document.getElementById('points').innerHTML = `<strong>Points: </strong>${ships[ID].points}`
+  document.getElementById('team_name').innerHTML = `<strong>Team </strong>${players[ID].team}`
+  document.getElementById('nick').innerHTML = `<strong>Nick </strong>${players[ID].nickName}`
   
   for (const [key, value] of Object.entries(ships)) {
     if(ships[key].lives === 0){
       delete ships[key]
+      StarShip.players = StarShip.players.filter(x => x.id != key)
       console.log(`${key}: ${value}`)
-    }
-    
+    }    
   }
-
-  
 }
 
 async function loadLogin(){
@@ -141,7 +145,7 @@ function addStarshipEventListeners(){
 
   // Get the starship dropdown options
   const starShipDropDownOptions = document.getElementById('starship-dropdown-options')
-  starShipDropDown.addEventListener('click', function(event) {
+  starShipDropDownOptions.addEventListener('click', function(event) {
     if (event.target.nodeName == "SPAN"){
       let name = document.getElementById('starship-name')
       name.innerHTML = event.target.getAttribute("data-value")
@@ -158,13 +162,10 @@ async function loadGame(dataDict){
   galaxy = document.getElementById('galaxy')
   document.getElementById('room_code').innerHTML = "Room code: " + ROOM
 
+  
+
   console.log('Connecting to RabbitMQ/MQTT over WebSocket')
   client = await connect(rabbitmqSettings)
-  
-  //console.log('Creating USS Enterprise element')
-  //const enterprise = StarShip.create(galaxy, './assets/spaceship/ussenterprise.png', 'ussenterprise', 1, 1, 90)
-  //enterprise.play()
-  //enterprise.setState(1, 0)
 
   let channel = 'teamName/topic'
   channel += ROOM
@@ -173,7 +174,11 @@ async function loadGame(dataDict){
   batship.play(channel)
   addKeyEvent(batship)
 
+  const player = Player.create(NICKNAME, TEAM, ID)
+  console.log('Creating player object...' + player.team + player.id + player.nickName)
+
   ships[ID] = batship
+  players[ID] = player
   this.updateUserStatusInDOM()
 }
 
@@ -198,11 +203,13 @@ function getFormInfo(){
   const teamIndex = document.getElementById('team')
   const team = teamIndex.options[teamIndex.selectedIndex].text
   dataDict["ID"] = getRandomCode()
-  ID = dataDict["ID"]
   dataDict["nickName"] = nickName
   dataDict["gender"] = gender
   dataDict["starship"] = starship
   dataDict["team"] = team
+  ID = dataDict["ID"]
+  TEAM = dataDict["team"]
+  NICKNAME = dataDict["nickName"]
   return dataDict
 }
 

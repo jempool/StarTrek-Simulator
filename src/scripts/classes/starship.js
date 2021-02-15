@@ -61,7 +61,7 @@ class StarShip {
   setHealth(health){
     this.health = health
 
-    if (this.health === 0) {
+    if (this.health <= 0) {
       this.health = 100
       this.lives = this.lives - 1
     }
