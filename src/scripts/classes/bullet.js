@@ -83,7 +83,7 @@ class Bullet {
   }
 
   detectCollision(){
-    const listPlayers = StarShip.players
+    const listPlayers = Object.values(ships);
     setTimeout( () => {
       listPlayers.forEach(player => {        
         if (this.haveCollided(this, player)){

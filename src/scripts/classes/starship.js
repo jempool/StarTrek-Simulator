@@ -1,6 +1,4 @@
-class StarShip {
-  static players = []
-  static id = 0
+class StarShip {   
   constructor(el, x = 0, y = 0, angle = 0, id) {
     this.el = el
     this.setState()
@@ -14,8 +12,7 @@ class StarShip {
     this.id = id
     this.health = 100
     this.points = 0
-    this.lives = 3
-    StarShip.players.push(this)
+    this.lives = 3    
   }
 
   setState(go = 0, direction = 0) {
