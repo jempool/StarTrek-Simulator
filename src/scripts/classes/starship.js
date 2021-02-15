@@ -14,6 +14,7 @@ class StarShip {
     this.id = id
     this.health = 100
     this.points = 0
+
     // this.id = StarShip.id
     // StarShip.id ++
     StarShip.players.push(this)
@@ -30,8 +31,8 @@ class StarShip {
 
   setPosition(x, y) {
 
-    const window_width= document.getElementById('galaxy').clientWidth
-    const window_height= document.getElementById('galaxy').clientHeight
+    const window_width= document.getElementById('galaxy').clientWidth - document.getElementById('leaderboard').clientWidth
+    const window_height= document.getElementById('galaxy').clientHeight 
 
     if (x <= 0) x = window_width -(this.ship_width+1);
     if (x +this.ship_width >= window_width) x = 0;
@@ -71,6 +72,8 @@ class StarShip {
     this.el.style.visibility = visible ? 'visible' : 'hidden'
   }
 
+ 
+
   play(channel) {
     this.timer = setInterval(()=> {
       const { go, direction } = this.state  
@@ -88,11 +91,14 @@ class StarShip {
     }, 1000/24)
   }
 
+
+
   
   static create(parent, imagePath, extraClass, x = 0, y = 0, angle = 0, id) {
     const img = document.createElement('img')
     img.className = `starship ${extraClass}`
     img.src = imagePath
+    img.id = id
     parent.appendChild(img)
    
     return new StarShip(img, x, y, angle, id)
