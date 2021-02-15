@@ -31,8 +31,8 @@ class StarShip {
 
   setPosition(x, y) {
 
-    const window_width= document.getElementById('galaxy').clientWidth
-    const window_height= document.getElementById('galaxy').clientHeight
+    const window_width= document.getElementById('galaxy').clientWidth - document.getElementById('leaderboard').clientWidth
+    const window_height= document.getElementById('galaxy').clientHeight 
 
     if (x <= 0) x = window_width -(this.ship_width+1);
     if (x +this.ship_width >= window_width) x = 0;
