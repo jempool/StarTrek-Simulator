@@ -34,17 +34,27 @@ class Bullet {
       const window_width = document.getElementById('galaxy').clientWidth
       const window_height = document.getElementById('galaxy').clientHeight
 
-      if (x <= 0) x = window_width - (this.width+1);
-      if (x +this.width >= window_width) x = 0;
+      const xAxisUpperLimitExceeded = x <= 0
+      const yAxisUpperLimitExceeded = y <= 0
+      const xAxisLowerLimitExceeded = x + this.width >= window_width
+      const yAxisLowerLimitExceeded = y + this.height >= window_height
 
-      if (y <= 0) y = window_height - (this.height+1);
-      if (y +this.height >= window_height) y = 0;
+      const resetXAxisAtLowerLimit = () => x = window_width - (this.width + 1)
+      const resetYAxisAtLowerLimit = () => y = window_height - (this.height + 1)
+      const resetXAxisAtUpperLimit = () => x = 0
+      const resetYAxisAtUpperLimit = () => y = 0
+
+      if (xAxisUpperLimitExceeded) resetXAxisAtLowerLimit
+      if (xAxisLowerLimitExceeded) resetXAxisAtUpperLimit
+
+      if (yAxisUpperLimitExceeded) resetYAxisAtLowerLimit
+      if (yAxisLowerLimitExceeded) resetYAxisAtUpperLimit 
       
       this.x = x
       this.y = y
 
-      this.el.style.left = `${x+18}px`
-      this.el.style.top = `${y+18}px`
+      this.el.style.left = `${x + 18}px`
+      this.el.style.top = `${y + 18}px`
     }
   }
 
@@ -52,7 +62,7 @@ class Bullet {
     if (visible) {
       this.el.style.visibility = 'none'
     
-    }else{
+    } else {
       this.el.style.visibility = 'hidden'
     }
   }

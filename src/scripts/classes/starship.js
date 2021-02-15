@@ -14,8 +14,6 @@ class StarShip {
     this.id = id
     this.health = 100
     this.points = 0
-    // this.id = StarShip.id
-    // StarShip.id ++
     StarShip.players.push(this)
   }
 
@@ -33,11 +31,21 @@ class StarShip {
     const window_width= document.getElementById('galaxy').clientWidth
     const window_height= document.getElementById('galaxy').clientHeight
 
-    if (x <= 0) x = window_width -(this.ship_width+1);
-    if (x +this.ship_width >= window_width) x = 0;
+    const xAxisUpperLimitExceeded = x <= 0
+    const yAxisUpperLimitExceeded = y <= 0
+    const xAxisLowerLimitExceeded = x + this.ship_width >= window_width
+    const yAxisLowerLimitExceeded = y + this.ship_height >= window_height
 
-    if (y <= 0) y = window_height -(this.ship_height+1);
-    if (y +this.ship_height >= window_height) y=0;
+    const resetXAxisAtLowerLimit = () => x = window_width -(this.ship_width + 1)
+    const resetYAxisAtLowerLimit = () => y = window_height -(this.ship_height + 1);
+    const resetXAxisAtUpperLimit = () => x = 0
+    const resetYAxisAtUpperLimit = () => y = 0
+
+    if (xAxisUpperLimitExceeded) resetXAxisAtLowerLimit
+    if (xAxisLowerLimitExceeded) resetXAxisAtUpperLimit
+
+    if (yAxisUpperLimitExceeded) resetYAxisAtLowerLimit
+    if (yAxisLowerLimitExceeded) resetYAxisAtUpperLimit
 
     this.x = x
     this.y = y
