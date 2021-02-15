@@ -211,34 +211,41 @@ function addLeaderBoard(){
     if (!document.getElementById(`p+${key}`)) {
       let element = document.createElement("p")
       element.id =  `p+${key}`
-      let node = document.createTextNode(`${ship.id}, ${ship.points}`)
+      const nick = players[ship.id].nickName
+      const team = players[ship.id].team
+      let node = document.createTextNode(`${nick}, ${ship.points}`)
       element.appendChild(node)
       parent.appendChild(element)
+      if (team == "Klingon"){
+        element.style.border = "1px solid rgb(3, 80, 26)";
+      } else{
+        element.style.border = "1px solid gold";
+      }
     }else{
-      document.getElementById(`p+${key}`).innerHTML = `${ship.id}, ${ship.points}`
-      orderLearBoard()
+      document.getElementById(`p+${key}`).innerHTML = `${players[ship.id].nickName}, ${ship.points}`
+      orderLeaderBoard()
     }
   }
 }
 
-function orderLearBoard(){
+function orderLeaderBoard(){
   const parent = document.getElementById("leaderboard")
   const elements = parent.childNodes
-  let j = 0
-  while(j < elements.length){
-    let min;
-    for (let i = j; i < elements.length; i++) {
+  let j = elements.length
+  while(j > 0){
+    let max;
+    for (let i = 0; i < j; i++) {
       const element = elements[i];
-      if (i == j){
-        min = element 
+      if (i == 0){
+        max = element 
       }else{
-        if (ships[element.id.slice(2)].points < ships[min.id.slice(2)].points ){
-          min = element
+        if (ships[element.id.slice(2)].points > ships[max.id.slice(2)].points){
+          max = element
         }
       }
     }
-    parent.appendChild(min);
-    j++
+    parent.appendChild(max);
+    j--
   }
 
 }
