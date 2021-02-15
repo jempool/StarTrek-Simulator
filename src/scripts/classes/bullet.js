@@ -79,10 +79,15 @@ class Bullet {
           this.setVisibility(false)
           this.stop() // Detiene la bala
           this.setPosition(0,0)
-          // Check if the bullet was from my own team
-          if(players[player.id].team != TEAM && !this.fakeBullet){ 
-            this.updatePointsAndHealth (ID, player.id)
-          }
+          
+          // Calculating points and health after collision
+          if(
+            players[player.id].team != TEAM // Check if the bullet was from my own team            
+            && !this.fakeBullet // it's a real bullet
+            && ships[ID] != undefined // the shooter still alive
+            && ships[player.id] != undefined){ // the target still alive
+              this.updatePointsAndHealth (ID, player.id)
+            }
         } 
       })
     },250)

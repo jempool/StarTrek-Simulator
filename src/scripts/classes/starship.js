@@ -14,9 +14,7 @@ class StarShip {
     this.id = id
     this.health = 100
     this.points = 0
-
-    // this.id = StarShip.id
-    // StarShip.id ++
+    this.lives = 3
     StarShip.players.push(this)
   }
 
@@ -62,6 +60,22 @@ class StarShip {
 
   setHealth(health){
     this.health = health
+
+    if (this.health <= 0) {
+      this.health = 100
+      this.lives = this.lives - 1
+    }
+    
+    if (this.lives === 0) {
+      this.health = 0
+      
+    let thisShip = document.getElementById(this.id)
+    thisShip.parentNode.removeChild(thisShip)
+
+    if(ships[ID].lives === 0)
+      document.getElementById('status').innerHTML = `Game Over`
+
+    }
   }
 
   setPoints(points){
@@ -97,6 +111,7 @@ class StarShip {
   static create(parent, imagePath, extraClass, x = 0, y = 0, angle = 0, id) {
     const img = document.createElement('img')
     img.className = `starship ${extraClass}`
+    img.id = id
     img.src = imagePath
     img.id = id
     parent.appendChild(img)
