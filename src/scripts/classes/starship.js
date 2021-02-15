@@ -37,16 +37,16 @@ class StarShip {
     const xAxisLowerLimitExceeded = x + this.ship_width >= window_width
     const yAxisLowerLimitExceeded = y + this.ship_height >= window_height
 
-    const resetXAxisAtLowerLimit = () => x = window_width -(this.ship_width + 1)
-    const resetYAxisAtLowerLimit = () => y = window_height -(this.ship_height + 1);
-    const resetXAxisAtUpperLimit = () => x = 0
-    const resetYAxisAtUpperLimit = () => y = 0
+    const newXPosAtLowerLimit = window_width - (this.ship_width + 1)
+    const newYPosAtLowerLimit = window_height - (this.ship_height + 1);
+    const newXPosAtUpperLimit = 0
+    const newYPosAtUpperLimit = 0
 
-    if (xAxisUpperLimitExceeded) resetXAxisAtLowerLimit
-    if (xAxisLowerLimitExceeded) resetXAxisAtUpperLimit
+    if (xAxisUpperLimitExceeded) x = newXPosAtLowerLimit
+    if (xAxisLowerLimitExceeded) x = newXPosAtUpperLimit
 
-    if (yAxisUpperLimitExceeded) resetYAxisAtLowerLimit
-    if (yAxisLowerLimitExceeded) resetYAxisAtUpperLimit
+    if (yAxisUpperLimitExceeded) y = newYPosAtLowerLimit
+    if (yAxisLowerLimitExceeded) y = newYPosAtUpperLimit
 
     this.x = x
     this.y = y
