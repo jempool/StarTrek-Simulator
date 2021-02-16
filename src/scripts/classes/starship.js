@@ -1,6 +1,4 @@
-class StarShip {
-  static players = []
-  static id = 0
+class StarShip {   
   constructor(el, x = 0, y = 0, angle = 0, id) {
     this.el = el
     this.setState()
@@ -14,8 +12,7 @@ class StarShip {
     this.id = id
     this.health = 100
     this.points = 0
-    this.lives = 3
-    StarShip.players.push(this)
+    this.lives = 3    
   }
 
   setState(go = 0, direction = 0) {
@@ -32,11 +29,21 @@ class StarShip {
     const window_width= document.getElementById('galaxy').clientWidth - document.getElementById('leaderboard').clientWidth
     const window_height= document.getElementById('galaxy').clientHeight 
 
-    if (x <= 0) x = window_width -(this.ship_width+1);
-    if (x +this.ship_width >= window_width) x = 0;
+    const xAxisUpperLimitExceeded = x <= 0
+    const yAxisUpperLimitExceeded = y <= 0
+    const xAxisLowerLimitExceeded = x + this.ship_width >= window_width
+    const yAxisLowerLimitExceeded = y + this.ship_height >= window_height
 
-    if (y <= 0) y = window_height -(this.ship_height+1);
-    if (y +this.ship_height >= window_height) y=0;
+    const newXPosAtLowerLimit = window_width - (this.ship_width + 1)
+    const newYPosAtLowerLimit = window_height - (this.ship_height + 1);
+    const newXPosAtUpperLimit = 0
+    const newYPosAtUpperLimit = 0
+
+    if (xAxisUpperLimitExceeded) x = newXPosAtLowerLimit
+    if (xAxisLowerLimitExceeded) x = newXPosAtUpperLimit
+
+    if (yAxisUpperLimitExceeded) y = newYPosAtLowerLimit
+    if (yAxisLowerLimitExceeded) y = newYPosAtUpperLimit
 
     this.x = x
     this.y = y

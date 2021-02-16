@@ -35,6 +35,7 @@ async function connect(options, spritePath, battleshipXPos, battleshipYPos) {
     client.subscribe(channel).on(message => {
       const msj = JSON.parse(message.string)
       
+      if(msj != undefined)
       resolveMessage(msj, ID, ships, client, channel, players, spritePath)
 
     })
@@ -113,16 +114,20 @@ function updateUserStatusInDOM() {
   document.getElementById('points').innerHTML = `<strong>Points: </strong>${ships[ID].points}`
   document.getElementById('team_name').innerHTML = `<strong>Team </strong>${players[ID].team}`
   document.getElementById('nick').innerHTML = `<strong>Nick </strong>${players[ID].nickName}`
+
+  const shipsWithZeroLives = []
   
   for (const [key, value] of Object.entries(ships)) {
-    if(ships[key].lives === 0){
-      delete ships[key]
-      StarShip.players = StarShip.players.filter(x => x.id != key)
-      console.log(`${key}: ${value}`)
-    }    
-  }
+    if(ships[key].lives === 0)
+      shipsWithZeroLives.push(ships[key])      
+    }
 
-  addLeaderBoard()
+    shipsWithZeroLives.map( ship => {
+      delete ships[ship.id]
+    })
+
+  // uncomment when corrected
+  // addLeaderBoard()
 }
 
 async function loadLogin(){

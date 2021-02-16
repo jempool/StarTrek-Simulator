@@ -22,28 +22,39 @@ class Bullet {
     this.el.style.transform = `rotate(${angle}deg)`
   }
 
-  setPosition(x, y) { 
+  setPosition(x, y) {     
+    const bulletInDOM = document.getElementsByClassName(this.el.className)[0]
     
-    if(document.getElementsByClassName(this.el.className)[0] === undefined){
-      
-      this.stop();
-      
+    if(bulletInDOM === undefined){      
+    
+      this.stop();      
+
     } else {
     
+      const window_width = document.getElementById('galaxy').clientWidth - document.getElementById('leaderboard').clientWidth
+      const window_height = document.getElementById('galaxy').clientHeight
 
-      const window_width= document.getElementById('galaxy').clientWidth - document.getElementById('leaderboard').clientWidth
-      const window_height= document.getElementById('galaxy').clientHeight
+      const xAxisUpperLimitExceeded = x <= 0
+      const yAxisUpperLimitExceeded = y <= 0
+      const xAxisLowerLimitExceeded = x + this.width >= window_width
+      const yAxisLowerLimitExceeded = y + this.height >= window_height
 
-      if (x <= 0) x = window_width -(this.width+1);
-      if (x +this.width >= window_width) x = 0;
-      if (y <= 0) y = window_height -(this.height+1);
-      if (y +this.height >= window_height) y=0;
+      const newXPosAtLowerLimit = window_width - (this.width + 1)
+      const newYPosAtLowerLimit = window_height - (this.height + 1)
+      const newXPosAtUpperLimit = 0
+      const newYPosAtUpperLimit = 0
+
+      if (xAxisUpperLimitExceeded) x = newXPosAtLowerLimit
+      if (xAxisLowerLimitExceeded) x = newXPosAtUpperLimit
+
+      if (yAxisUpperLimitExceeded) y = newYPosAtLowerLimit
+      if (yAxisLowerLimitExceeded) y = newYPosAtUpperLimit 
       
       this.x = x
       this.y = y
 
-      this.el.style.left = `${x+18}px`
-      this.el.style.top = `${y+18}px`
+      this.el.style.left = `${x + 18}px`
+      this.el.style.top = `${y + 18}px`
     }
   }
 
@@ -51,7 +62,7 @@ class Bullet {
     if (visible) {
       this.el.style.visibility = 'none'
     
-    }else{
+    } else {
       this.el.style.visibility = 'hidden'
     }
   }
@@ -67,34 +78,38 @@ class Bullet {
   
       this.setPosition(x, y)
       this.setAngle(angle)
-      this.detectColition()
+      this.detectCollision()
     }, 1000/24)
   }
 
-  detectColition(){
-    const listPlayers = StarShip.players
+  detectCollision(){
+    const listPlayers = Object.values(ships);
     setTimeout( () => {
-      listPlayers.forEach(player => {
-        if (Math.hypot(player.x - this.x, player.y - this.y) < player.radio + this.radio){
+      listPlayers.forEach(player => {        
+        if (this.haveCollided(this, player)){
           this.setVisibility(false)
-          this.stop() // Detiene la bala
+          this.stop()
           this.setPosition(0,0)
           
+          const isNotMyOwnTeam = players[player.id].team != TEAM
+          const isNotFakeBullet = !this.fakeBullet
+          const shooterStillAlive = ships[ID] != undefined
+          const targetStillAlive = ships[player.id] != undefined
+          
           // Calculating points and health after collision
-          if(
-            players[player.id].team != TEAM // Check if the bullet was from my own team            
-            && !this.fakeBullet // it's a real bullet
-            && ships[ID] != undefined // the shooter still alive
-            && ships[player.id] != undefined){ // the target still alive
-              this.updatePointsAndHealth (ID, player.id)
-            }
+          if(isNotMyOwnTeam && isNotFakeBullet && shooterStillAlive && targetStillAlive){ 
+            this.updatePointsAndHealth (ID, player.id)
+          }
         } 
       })
     },250)
   }
 
-  updatePointsAndHealth (myId, enemyId){    
-    console.log(`Yo #${myId} le di a #${enemyId}`)
+  haveCollided(bullet, player) {
+    return Math.hypot(player.x - bullet.x, player.y - bullet.y) < player.radio + bullet.radio
+  }
+
+  updatePointsAndHealth (myId, enemyId){        
     ships[myId].points += 10
     ships[enemyId].health -= 25 
     
@@ -122,21 +137,20 @@ class Bullet {
   }
 
   static create(parent, imagePath, x = 0, y = 0, angle = 0, id, fakeBullet) {
-
-    // "time-to-live" of the bullet
-    const ttl = setInterval(() => {      
+    
+    const bulletLifespan = setInterval(() => {      
       let bullet = document.getElementById(id)
       bullet.parentNode.removeChild(bullet)
-      clearInterval(ttl)
+      clearInterval(bulletLifespan)
     }, 2000);
 
-    // creation of the element 'bullet' in the DOM
+    // Creation of the element 'bullet' in the DOM
     const img = document.createElement('img')
     img.className = `bullet`
     img.id = id
     img.src = imagePath
     parent.appendChild(img)
+    
     return new Bullet(img, x, y, angle, id, fakeBullet)
-
   }
 }
