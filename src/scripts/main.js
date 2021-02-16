@@ -2,7 +2,6 @@ let ROOM = ''
 let ID = ''
 let NICKNAME = "SHA"
 const GENDER = "M"
-const SPRITEPATH = './assets/spaceship/batship.png'
 let TEAM = "1"
 let channel = 'teamName/topic'
 
@@ -19,7 +18,15 @@ const rabbitmqSettings = {
   path: 'ws'
 }
 
-async function connect(options) {
+const spritePaths = {
+  "USS Entreprise": './assets/spaceship/ussenterprise.png',
+  "Miranda": './assets/spaceship/battleship.png',
+  "Bird of Prey": './assets/spaceship/spaceship.png',
+  "IKS Devisor": './assets/spaceship/batship.png',
+  "Starship": './assets/spaceship/batship.png'
+}
+
+async function connect(options, spritePath, battleshipXPos, battleshipYPos) {
   try {
     // let channel = 'teamName/topic'
     channel += ROOM
@@ -29,10 +36,10 @@ async function connect(options) {
       const msj = JSON.parse(message.string)
       
       if(msj != undefined)
-        resolveMessage(msj, ID, ships, client, channel, players)
+      resolveMessage(msj, ID, ships, client, channel, players, spritePath)
 
     })
-    client.publish(channel, { type: "arrival", id: ID, sprite: SPRITEPATH, team: TEAM, nickname: NICKNAME})
+    client.publish(channel, { type: "arrival", id: ID, sprite: spritePath, team: TEAM, nickname: NICKNAME, xPos: battleshipXPos, yPos: battleshipYPos})
     return client
   } catch (error) {
     console.log(error)
@@ -169,15 +176,18 @@ async function loadGame(dataDict){
   galaxy = document.getElementById('galaxy')
   document.getElementById('room_code').innerHTML = "Room code: " + ROOM
 
-  
+  let galaxyWidth = galaxy.offsetWidth
+  let galaxyHeight = galaxy.offsetHeight
+  let y = getRandomPosition(0, galaxyHeight)
+  let x = getRandomPosition(0, galaxyWidth)
 
   console.log('Connecting to RabbitMQ/MQTT over WebSocket')
-  client = await connect(rabbitmqSettings)
+  client = await connect(rabbitmqSettings, dataDict["starship"], x, y)
 
   let channel = 'teamName/topic'
   channel += ROOM
 
-  const batship = StarShip.create(galaxy, SPRITEPATH, 'small batship', 200, 200, 45, ID)
+  const batship = StarShip.create(galaxy, dataDict["starship"], 'small batship', x, y, 45, ID)
   batship.add
   batship.play(channel)
   addKeyEvent(batship)
@@ -207,7 +217,7 @@ function getFormInfo(){
   const nickName = document.getElementById('nickName').value
   const genderIndex = document.getElementById('gender')
   const gender = genderIndex.options[genderIndex.selectedIndex].text
-  const starship = document.getElementById('starship-name').innerHTML
+  const starship = spritePaths[document.getElementById('starship-name').textContent]
   const teamIndex = document.getElementById('team')
   const team = teamIndex.options[teamIndex.selectedIndex].text
   dataDict["ID"] = getRandomCode()

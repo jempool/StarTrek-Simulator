@@ -17,3 +17,7 @@ function getLetterRandomCode(){
   }
   return code
 }
+
+function getRandomPosition(minValue, maxValue) {
+  return Math.random() * (maxValue - minValue) + minValue;
+}
