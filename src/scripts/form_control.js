@@ -14,10 +14,12 @@ function createRoom(){
   // console.log('Creating a player object')
   // const player = Player.create(roomCode, dataDict["nickName"], dataDict["gender"], dataDict["starship"], dataDict["team"], "captain")
 
-  changeGameState("game")
+  changeGameState("game", dataDict)
 }
 
 async function joinRoom(){
+  document.getElementById('joinRoomButton').setAttribute("disabled","disabled");
+
   ROOM = document.getElementById('code').value
   let dataDict = getFormInfo();
 
@@ -27,7 +29,10 @@ async function joinRoom(){
   let channel = 'teamName/topic'
   channel += ROOM
 
-  if (!checkFormularie(true)) return
+  if (!checkFormularie(true)){
+    document.getElementById('joinRoomButton').removeAttribute("disabled");
+    return
+  } 
 
   const roomCheck = await checkRoom(rabbitmqSettings, channel)
 
@@ -62,9 +67,10 @@ async function checkRoom(options, channel) {
     
     return new Promise(resolve => {
       setTimeout(() => {
+        document.getElementById('joinRoomButton').removeAttribute("disabled");
         client.unsubscribe(channel)
         resolve(response);
-      }, 2000);
+      }, 400);
     });
     
   } catch (error) {
