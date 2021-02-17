@@ -8,6 +8,7 @@ let channel = 'teamName/topic'
 let galaxy = {}
 let ships = {}
 let players = {}
+// const points ={"Klingon":0,"Federation":0}
 
 const rabbitmqSettings = {
   username: 'admin',
@@ -235,22 +236,42 @@ function getFormInfo(){
 function addLeaderBoard(){
   let parent
   for (let [key, ship] of Object.entries(ships)) {
+    const team = players[ship.id].team
     if (!document.getElementById(`p+${key}`)) {
-      let element = document.createElement("p")
+      let element = document.createElement("div")
       element.id =  `p+${key}`
       const nick = players[ship.id].nickName
-      const team = players[ship.id].team
       let node = document.createTextNode(`${nick}`)
       element.appendChild(node)
-      if (team == "Klingon"){
+      if (team === "Klingon"){
         parent = document.getElementById("Klingon-score")
         parent.appendChild(element)
-        element.style.border = "2px solid rgba(25,255,255,255)";
+        element.style.border = "2px solid rgba(25,255,255,255);";
+        paintLives(key,element,team)
       } else{
         parent = document.getElementById("Federation-score")
         parent.appendChild(element)
-        element.style.border = "2px solid rgba(245,97,30,255)";
+        element.style.border = "2px solid rgba(245,97,30,255);";
+        paintLives(key,element,team)
       }
+    }else{
+      let element = document.getElementById(`p+${key}`)
+      paintLives(key, element, team)
+    }
+  }
+}
+
+
+function paintLives(idStarShip,element, team){
+  const parent = element
+  const lives = ships[idStarShip].lives
+  const color = (team === "Klingon") ? "rgba(25,255,255,255)" : "rgba(245,97,30,255)"
+  for (let i = 0; i < lives; i++) {
+    if (!document.getElementById(`live${idStarShip}${i+1}`)) {
+    let element = document.createElement("div")
+    element.id = `live${idStarShip}${i+1}`
+    element.style = `width:5px;height:10px;border:1px solid ${color}; background:${color};float: left; margin-left: 2px;`
+    parent.appendChild(element)
     }
   }
 }
@@ -260,36 +281,7 @@ function addLeaderBoard(){
   orderLeaderBoard()
 } */
 
-function updateTeamScore(){
-  const parent = document.getElementById("leaderboard")
-  let klingon_points = 0
-  let federation_points = 0
-  for (let [key, ship] of Object.entries(ships)) {
-    const team = players[key].team
-    const element = document.getElementById(`${team}-score`)
-    const scoreElement = element.getElementsByClassName("team-score")[0]
-    if (team == "Klingon"){
-      klingon_points += ship.points
-    }else{
-      federation_points += ship.points
-    }
-  }
 
-  //Include points in DOM
-  console.log(klingon_points, federation_points)
-  const klingon_element = document.getElementById(`Klingon-score`).getElementsByClassName("team-score")[0]
-  klingon_element.innerHTML = `Score: <strong> ${klingon_points} </strong>`
-  const federation_element = document.getElementById(`Federation-score`).getElementsByClassName("team-score")[0]
-  federation_element.innerHTML = `Score: <strong> ${federation_points} </strong>`
-
-  //Order Teams Score
-  if (klingon_points >= federation_points){
-    parent.appendChild(document.getElementById(`Federation-score`))
-  }else{
-    parent.appendChild(document.getElementById(`Klingon-score`))
-  }
-  
-}
 
 async function main() {
   console.log('Welcome to our Star Trek Simulator!')
