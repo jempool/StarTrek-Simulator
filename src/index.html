@@ -22,11 +22,12 @@
   <script src="./scripts/utils.js"></script>
   <script src="./scripts/connection_utilities.js"></script>
   <script src="./scripts/form_control.js"></script>
+  <script src="./scripts/ui_configuration.js"></script>
 
 </head>
 
 <body onload="main()">
-  <h1 class="title">Star Trek Simulator</h1>
+  <!-- <h1 class="title">Star Trek Simulator</h1> -->
   <noscript>Your browser does not support JavaScript!</noscript>
 
   <div id='id'></div>
@@ -45,6 +46,32 @@
 
   </div>
 
+  <div class="background" id='win'>
+    <div class='back-square' id='back-square'></div>
+    <div class='main-square yellow-border' id='main-square'>
+      <p><font class="title">StarTrek</font></p>
+      <p><font class="title">Simulator</font></p>
+      <div style="margin: 40px auto;">
+        <p><font class="subtitle">Great battle crew!</font></p>
+        <p><font class="parragraph">Best player was</font></p>
+        <b><font class="parragraph bold">Gary</font></b>
+      </div>
+      <img src="./assets/environment/star.png" class="icon small"></img>
+      <button class = "btn-try yellow-background-color" onclick="loadLogin(); return false;">Go again</button>
+    </div>
+  </div>
+
+  <div class="background" id='lose'>
+    <div class='back-square' id='back-square'></div>
+    <div class='main-square orange-border' id='main-square'>
+      <p><font class="title">StarTrek</font></p>
+      <p><font class="title">Simulator</font></p>
+      <div style="margin: 90px 145px;">
+        <p><font class="subtitle">Your ship has been destroyed.</font></p>
+      </div>
+      <button class = "btn-try orange-background-color" onclick="loadLogin(); return false;">Go again</button>
+    </div>
+  </div>
 
   <div id="formularies">
     <button class = "join" onclick="loadJoinRoom()"> Join Room </button>
