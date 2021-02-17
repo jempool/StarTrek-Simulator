@@ -127,7 +127,8 @@ function updateUserStatusInDOM() {
     })
 
   // uncomment when corrected
-  // addLeaderBoard()
+  updateTeamScore()
+  addLeaderBoard()
 }
 
 async function loadLogin(){
@@ -232,48 +233,62 @@ function getFormInfo(){
 }
 
 function addLeaderBoard(){
-  const parent = document.getElementById("leaderboard")
+  let parent
   for (let [key, ship] of Object.entries(ships)) {
     if (!document.getElementById(`p+${key}`)) {
       let element = document.createElement("p")
       element.id =  `p+${key}`
       const nick = players[ship.id].nickName
       const team = players[ship.id].team
-      let node = document.createTextNode(`${nick}, ${ship.points}`)
+      let node = document.createTextNode(`${nick}`)
       element.appendChild(node)
-      parent.appendChild(element)
       if (team == "Klingon"){
-        element.style.border = "1px solid rgb(3, 80, 26)";
+        parent = document.getElementById("Klingon-score")
+        parent.appendChild(element)
+        element.style.border = "2px solid rgba(25,255,255,255)";
       } else{
-        element.style.border = "1px solid gold";
+        parent = document.getElementById("Federation-score")
+        parent.appendChild(element)
+        element.style.border = "2px solid rgba(245,97,30,255)";
       }
-    }else{
-      document.getElementById(`p+${key}`).innerHTML = `${players[ship.id].nickName}, ${ship.points}`
-      orderLeaderBoard()
     }
   }
 }
 
-function orderLeaderBoard(){
+/* }else{
+  document.getElementById(`p+${key}`).innerHTML = `${players[ship.id].nickName}`
+  orderLeaderBoard()
+} */
+
+function updateTeamScore(){
   const parent = document.getElementById("leaderboard")
-  const elements = parent.childNodes
-  let j = elements.length
-  while(j > 0){
-    let max;
-    for (let i = 0; i < j; i++) {
-      const element = elements[i];
-      if (i == 0){
-        max = element 
-      }else{
-        if (ships[element.id.slice(2)].points > ships[max.id.slice(2)].points){
-          max = element
-        }
-      }
+  let klingon_points = 0
+  let federation_points = 0
+  for (let [key, ship] of Object.entries(ships)) {
+    const team = players[key].team
+    const element = document.getElementById(`${team}-score`)
+    const scoreElement = element.getElementsByClassName("team-score")[0]
+    if (team == "Klingon"){
+      klingon_points += ship.points
+    }else{
+      federation_points += ship.points
     }
-    parent.appendChild(max);
-    j--
   }
 
+  //Include points in DOM
+  console.log(klingon_points, federation_points)
+  const klingon_element = document.getElementById(`Klingon-score`).getElementsByClassName("team-score")[0]
+  klingon_element.innerHTML = `Score: <strong> ${klingon_points} </strong>`
+  const federation_element = document.getElementById(`Federation-score`).getElementsByClassName("team-score")[0]
+  federation_element.innerHTML = `Score: <strong> ${federation_points} </strong>`
+
+  //Order Teams Score
+  if (klingon_points >= federation_points){
+    parent.appendChild(document.getElementById(`Federation-score`))
+  }else{
+    parent.appendChild(document.getElementById(`Klingon-score`))
+  }
+  
 }
 
 async function main() {
