@@ -13,10 +13,11 @@ const rabbitmqSettings = {
   username: 'admin',
   password: 'admin',
   host: 'frontend.ascuy.me',
-  port: 15675,
+  port: 443,
+  ssl: true,
   keepalive: 20,
   path: 'ws'
-}
+ }
 
 const spritePaths = {
   "USS Entreprise": './assets/spaceship/ussenterprise.png',
@@ -26,7 +27,7 @@ const spritePaths = {
   "Starship": './assets/spaceship/batship.png'
 }
 
-async function connect(options, spritePath, battleshipXPos, battleshipYPos) {
+async function connect(options, spritePath, battleshipXPos, battleshipYPos, teamStyle) {
   try {
     // let channel = 'teamName/topic'
     channel += ROOM
@@ -36,10 +37,10 @@ async function connect(options, spritePath, battleshipXPos, battleshipYPos) {
       const msj = JSON.parse(message.string)
       
       if(msj != undefined)
-      resolveMessage(msj, ID, ships, client, channel, players, spritePath)
+      resolveMessage(msj, ID, ships, client, channel, players, spritePath, teamStyle)
 
     })
-    client.publish(channel, { type: "arrival", id: ID, sprite: spritePath, team: TEAM, nickname: NICKNAME, xPos: battleshipXPos, yPos: battleshipYPos})
+    client.publish(channel, { type: "arrival", id: ID, sprite: spritePath, team: TEAM, nickname: NICKNAME, xPos: battleshipXPos, yPos: battleshipYPos, teamStyle})
     return client
   } catch (error) {
     console.log(error)
@@ -182,13 +183,20 @@ async function loadGame(dataDict){
   let y = getRandomPosition(0, galaxyHeight)
   let x = getRandomPosition(0, galaxyWidth)
 
+  let teamStyle = ''
+  if (dataDict["team"] == "Klingon") {
+    teamStyle = 'klingonStarship'
+  } else {
+    teamStyle = 'federationStarship'
+  }
+
   console.log('Connecting to RabbitMQ/MQTT over WebSocket')
-  client = await connect(rabbitmqSettings, dataDict["starship"], x, y)
+  client = await connect(rabbitmqSettings, dataDict["starship"], x, y, teamStyle)
 
   let channel = 'teamName/topic'
   channel += ROOM
 
-  const batship = StarShip.create(galaxy, dataDict["starship"], 'small batship', x, y, 45, ID)
+  const batship = StarShip.create(galaxy, dataDict["starship"], 'small batship', x, y, 45, ID, teamStyle)
   batship.add
   batship.play(channel)
   addKeyEvent(batship)
