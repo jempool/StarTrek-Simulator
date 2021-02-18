@@ -1,4 +1,4 @@
-function resolveMessage(msj, ownID, ships, client, channel, players, ownSpritePath) {
+function resolveMessage(msj, ownID, ships, client, channel, players, ownSpritePath, ownTeamStyle) {
   switch(msj.type) {
       case "arrival":
         console.log("A new contender has just arrived!!!!")
@@ -7,17 +7,17 @@ function resolveMessage(msj, ownID, ships, client, channel, players, ownSpritePa
         if(msj.id != ownID) {
           console.log("New ship, id:")
           console.log(msj.id)
-          const batship = StarShip.create(galaxy, msj.sprite, 'small batship', msj.xPos, msj.yPos, 45, msj.id)
+          const batship = StarShip.create(galaxy, msj.sprite, 'small batship', msj.xPos, msj.yPos, 45, msj.id, msj.teamStyle)
           const player = Player.create(msj.nickname, msj.team, msj.id)
           ships[msj.id] = batship
           players[msj.id] = player
           console.log(msj.id)
-          client.publish(channel, { type: "Existence notification", id: ID, x: ships[ID].x, y: ships[ID].y, angle: ships[ID].angle, sprite: ownSpritePath, health: ships[ID].health, points: ships[ID].points, nickname: NICKNAME, team: TEAM })
+          client.publish(channel, { type: "Existence notification", id: ID, x: ships[ID].x, y: ships[ID].y, angle: ships[ID].angle, sprite: ownSpritePath, health: ships[ID].health, points: ships[ID].points, nickname: NICKNAME, team: TEAM, teamStyle: ownTeamStyle })
         }
         break;
       case "Existence notification":
         if(msj.id != ownID && !(msj.id in ships)) {
-          const batship = StarShip.create(galaxy, msj.sprite, 'small batship', msj.x, msj.y, msj.angle, msj.id)
+          const batship = StarShip.create(galaxy, msj.sprite, 'small batship', msj.x, msj.y, msj.angle, msj.id, msj.teamStyle)
           const player = Player.create(msj.nickname, msj.team, msj.id)
           ships[msj.id] = batship
           ships[msj.id].setPosition(msj.x, msj.y)
