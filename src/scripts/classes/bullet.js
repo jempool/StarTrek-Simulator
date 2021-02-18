@@ -6,7 +6,7 @@ class Bullet {
     this.setPosition(x, y)
     this.setVisibility(true)
     this.id = id
-    this.speed = 10
+    this.speed = Settings.bulletSpeed
     this.width = document.getElementsByClassName(this.el.className)[0].width
     this.height = document.getElementsByClassName(this.el.className)[0].height
     this.radio = this.height/2
