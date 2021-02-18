@@ -2,9 +2,6 @@ function setDisplayByElementClassName(className, mode, index = -1) {
     if (index !== -1){
         document.getElementsByClassName(className)[index].style.display = mode
     }
-    else{
-        document.getElementsByClassName(className).style.display = mode
-    }
 }
 
 function setDisplayByElementId(id, mode) {
@@ -20,8 +17,8 @@ function setUiLoginDisplay(){
 }
 
 function setUiGameDisplay(){
-    setDisplayByElementId('galaxy', 'none')
-    setDisplayByElementId('formularies', 'block')
+    setDisplayByElementId('galaxy', 'block')
+    setDisplayByElementId('formularies', 'none')
     setDisplayByElementClassName('create-box', 'none', 0)
     setDisplayByElementId('win', 'none')
     setDisplayByElementId('lose', 'none')
