@@ -132,10 +132,6 @@ function updateUserStatusInDOM() {
 }
 
 async function loadLogin(){
-  document.getElementById('galaxy').style.display = "none"
-  document.getElementById('formularies').style.display = "block"
-  document.getElementsByClassName('create-box')[0].style.display = "none"
-
   const create_btn = document.getElementsByClassName('create')[0]
   create_btn.style.background = "none"
   create_btn.style.color = "rgb(52, 52, 52)"
@@ -169,10 +165,7 @@ function addStarshipEventListeners(){
 }
 
 
-async function loadGame(dataDict){
-  document.getElementById('galaxy').style.display = "block"
-  document.getElementById('formularies').style.display = "none"
-  
+async function loadGame(dataDict){  
   console.log('Starting Star Trek Simulator')
   galaxy = document.getElementById('galaxy')
   document.getElementById('room_code').innerHTML = "Room code: " + ROOM
@@ -203,13 +196,24 @@ async function loadGame(dataDict){
 
 function changeGameState(state, dataDict){
   switch(state) {
-    case "login":
-      console.log("Changing to login configuration")
+    case 'login':
+      console.log('Changing to login configuration')
+      setUiLoginDisplay()
       loadLogin()
-      break;
-    case "game":
-      console.log("Changing to game configuration")
+      break
+    case 'game':
+      console.log('Changing to game configuration')
+      setUiGameDisplay()
       loadGame(dataDict)
+      break
+    case 'win':
+        console.log('Changing to win configuration')
+        setUiWinDisplay()
+        break
+    case 'lose':
+      console.log('Changing to lose configuration')
+      setUiLoseDisplay()
+      break
     }
 }
 
@@ -292,8 +296,5 @@ function updateTeamScore(){
 }
 
 async function main() {
-  console.log('Welcome to our Star Trek Simulator!')
-  document.getElementById('formularies').style.display = "none"
-  document.getElementById('galaxy').style.display = "none"
-  changeGameState("login")
+  changeGameState('login')
 }
