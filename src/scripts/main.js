@@ -28,7 +28,7 @@ const spritePaths = {
   "Starship": './assets/spaceship/batship.png'
 }
 
-async function connect(options, spritePath, battleshipXPos, battleshipYPos) {
+async function connect(options, spritePath, battleshipXPos, battleshipYPos, teamStyle) {
   try {
     // let channel = 'teamName/topic'
     channel += ROOM
@@ -38,10 +38,10 @@ async function connect(options, spritePath, battleshipXPos, battleshipYPos) {
       const msj = JSON.parse(message.string)
       
       if(msj != undefined)
-      resolveMessage(msj, ID, ships, client, channel, players, spritePath)
+      resolveMessage(msj, ID, ships, client, channel, players, spritePath, teamStyle)
 
     })
-    client.publish(channel, { type: "arrival", id: ID, sprite: spritePath, team: TEAM, nickname: NICKNAME, xPos: battleshipXPos, yPos: battleshipYPos})
+    client.publish(channel, { type: "arrival", id: ID, sprite: spritePath, team: TEAM, nickname: NICKNAME, xPos: battleshipXPos, yPos: battleshipYPos, teamStyle})
     return client
   } catch (error) {
     console.log(error)
@@ -138,10 +138,6 @@ function updateUserStatusInDOM() {
 }
 
 async function loadLogin(){
-  document.getElementById('galaxy').style.display = "none"
-  document.getElementById('formularies').style.display = "block"
-  document.getElementsByClassName('create-box')[0].style.display = "none"
-
   const create_btn = document.getElementsByClassName('create')[0]
   create_btn.style.background = "none"
   create_btn.style.color = "rgb(52, 52, 52)"
@@ -175,10 +171,7 @@ function addStarshipEventListeners(){
 }
 
 
-async function loadGame(dataDict){
-  document.getElementById('galaxy').style.display = "block"
-  document.getElementById('formularies').style.display = "none"
-  
+async function loadGame(dataDict){  
   console.log('Starting Star Trek Simulator')
   galaxy = document.getElementById('galaxy')
   document.getElementById('room_code').innerHTML = "Room code: " + ROOM
@@ -188,13 +181,20 @@ async function loadGame(dataDict){
   let y = getRandomPosition(0, galaxyHeight)
   let x = getRandomPosition(0, galaxyWidth)
 
+  let teamStyle = ''
+  if (dataDict["team"] == "Klingon") {
+    teamStyle = 'klingonStarship'
+  } else {
+    teamStyle = 'federationStarship'
+  }
+
   console.log('Connecting to RabbitMQ/MQTT over WebSocket')
-  client = await connect(rabbitmqSettings, dataDict["starship"], x, y)
+  client = await connect(rabbitmqSettings, dataDict["starship"], x, y, teamStyle)
 
   let channel = 'teamName/topic'
   channel += ROOM
 
-  const batship = StarShip.create(galaxy, dataDict["starship"], 'small batship', x, y, 45, ID)
+  const batship = StarShip.create(galaxy, dataDict["starship"], 'small batship', x, y, 45, ID, teamStyle)
   batship.add
   batship.play(channel)
   addKeyEvent(batship)
@@ -209,13 +209,24 @@ async function loadGame(dataDict){
 
 function changeGameState(state, dataDict){
   switch(state) {
-    case "login":
-      console.log("Changing to login configuration")
+    case 'login':
+      console.log('Changing to login configuration')
+      setUiLoginDisplay()
       loadLogin()
-      break;
-    case "game":
-      console.log("Changing to game configuration")
+      break
+    case 'game':
+      console.log('Changing to game configuration')
+      setUiGameDisplay()
       loadGame(dataDict)
+      break
+    case 'win':
+      console.log('Changing to win configuration')
+      setUiWinDisplay()
+      break
+    case 'lose':
+      console.log('Changing to lose configuration')
+      setUiLoseDisplay()
+      break
     }
 }
 
@@ -249,8 +260,5 @@ function getFormInfo(){
 
 
 async function main() {
-  console.log('Welcome to our Star Trek Simulator!')
-  document.getElementById('formularies').style.display = "none"
-  document.getElementById('galaxy').style.display = "none"
-  changeGameState("login")
+  changeGameState('login')
 }

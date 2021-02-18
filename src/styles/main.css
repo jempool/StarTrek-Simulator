@@ -226,6 +226,118 @@ body{
   margin: 20px auto;
 }
 
+.background .back-square{
+  position: absolute;
+  width: 80%;
+  height: 75%;
+  margin: auto;
+  background-color: #012E30;
+  border-radius: 15px;
+  top: 10%;
+  bottom: 10%;
+  left: 5%;
+  right: 5%;
+  align-items: center;
+}
+
+.background .main-square{
+  position: absolute;
+  width: 30%;
+  height: 80%;
+  margin: auto;
+  background-color: #01121C;
+  border-radius: 15px;
+  top: 10%;
+  bottom: 10%;
+  left: 5%;
+  right: 5%;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  vertical-align: middle;
+  padding: 30px 30px;
+  justify-content:space-around
+}
+
+.blue-border{
+  border: 5px solid #19FFFF;
+}
+
+.orange-border{
+  border: 5px solid #F5611E;
+}
+
+.yellow-border{
+  border: 5px solid #FCB937;
+}
+
+.background{
+  height: 700px;
+}
+
+.background .title{
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 62px;
+  line-height: 62px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.background .subtitle{
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 20px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.background .parragraph{
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 15px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.background .bold{
+  font-weight: bold;
+}
+
+
+.background .btn-try{
+  width: 100px;
+  align-self: center;
+  height: 40px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  font-weight: bold;
+  text-transform: none;
+  letter-spacing: 1px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 30px;
+  display: block;
+  border: 0;
+  font-size: medium;
+  position: absolute;
+  top: 80%;
+  left: 40%;
+}
+
+.yellow-background-color{
+  background-color: #FCB937;
+}
+
+.orange-background-color{
+  background-color: #F5611E;
+}
+
 #team-score-board{
   position: absolute;
   width: 140px;
@@ -254,9 +366,22 @@ img.starship {
   visibility: hidden;
 }
 
+img.klingonStarship {
+  filter: drop-shadow(3px 3px 2px blue);
+}
+
+img.federationStarship {
+  filter: drop-shadow(3px 3px 2px red);
+}
+
 img.starship.small {
   width: 50px;
   height: 50px;
+}
+
+img.icon.small {
+  width: 80px;
+  height: 80px;
 }
 
 img.bullet {

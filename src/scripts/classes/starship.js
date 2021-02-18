@@ -115,9 +115,9 @@ class StarShip {
 
 
   
-  static create(parent, imagePath, extraClass, x = 0, y = 0, angle = 0, id) {
+  static create(parent, imagePath, extraClass, x = 0, y = 0, angle = 0, id, teamStyle) {
     const img = document.createElement('img')
-    img.className = `starship ${extraClass}`
+    img.className = `starship ${teamStyle} ${extraClass}`
     img.id = id
     img.src = imagePath
     img.id = id
