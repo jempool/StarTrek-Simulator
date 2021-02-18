@@ -215,9 +215,9 @@ function changeGameState(state, dataDict){
       loadGame(dataDict)
       break
     case 'win':
-        console.log('Changing to win configuration')
-        setUiWinDisplay()
-        break
+      console.log('Changing to win configuration')
+      setUiWinDisplay()
+      break
     case 'lose':
       console.log('Changing to lose configuration')
       setUiLoseDisplay()
