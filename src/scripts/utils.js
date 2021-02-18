@@ -23,7 +23,7 @@ function getRandomPosition(minValue, maxValue) {
 }
 
 function updateTeamScore(){
-  const parent = document.getElementById("leaderboard")
+  const parent = document.getElementById("team-score-board")
   let klingon_points = 0
   let federation_points = 0
   for (let [key, ship] of Object.entries(ships)) {
@@ -49,4 +49,59 @@ function updateTeamScore(){
     parent.appendChild(document.getElementById(`Klingon-score`))
   }
   
+}
+
+function AddTeamPointsBoard(){
+  let parent
+  for (let [key, ship] of Object.entries(ships)) {
+    const team = players[ship.id].team
+    if (!document.getElementById(`p+${key}`)) {
+      let element = document.createElement("div")
+      element.id =  `p+${key}`
+      parent = (team === "Klingon") ? document.getElementById("Klingon-score") : document.getElementById("Federation-score")
+      parent.appendChild(element)
+      const team_color = (team === "Klingon") ? "rgba(25,255,255,255)" : "rgba(245,97,30,255)"
+      element.style = `border: 2px solid ${team_color}; height: 20px`
+
+      const textelement =  document.createElement("p")
+      textelement.id =  `text+${key}`
+      textelement.style = "float: left;"
+      const nick = players[ship.id].nickName
+      let node = document.createTextNode( `${nick}`)
+      textelement.appendChild(node)
+      element.appendChild(textelement)
+      
+      paintLives(key,element,team)
+      }else{
+        let element = document.getElementById(`p+${key}`)
+        paintLives(key, element, team)
+      }
+  }
+}
+
+
+function paintLives(idStarShip,element, team){
+  const parent = element
+  const lives = ships[idStarShip].lives
+  const color = (team === "Klingon") ? "rgba(25,255,255,255)" : "rgba(245,97,30,255)"
+  for (let i = 0; i < lives; i++) {
+    if (!document.getElementById(`live${idStarShip}${i+1}`) && lives === 3) {
+      const element = document.createElement("div")
+      element.id = `live${idStarShip}${i+1}`
+      element.style = `width:5px;height:10px;border:1px solid ${color}; background:${color};float: left; margin-left: 3px; margin-top: 2px`
+      parent.appendChild(element)
+    } else{
+      if (lives < 3 /* Change by global*/) {
+        const element = document.getElementById(`live${idStarShip}${lives+1}`)
+        if(element){
+          removeLives(element, idStarShip)
+        }
+      }
+    }
+  }
+}
+
+function removeLives(element, idStarShip){
+  const parent = document.getElementById(`p+${idStarShip}`)
+  parent.removeChild(element)
 }

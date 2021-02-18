@@ -14,10 +14,11 @@ const rabbitmqSettings = {
   username: 'admin',
   password: 'admin',
   host: 'frontend.ascuy.me',
-  port: 15675,
+  port: 443,
+  ssl: true,
   keepalive: 20,
   path: 'ws'
-}
+ }
 
 const spritePaths = {
   "USS Entreprise": './assets/spaceship/ussenterprise.png',
@@ -116,20 +117,24 @@ function updateUserStatusInDOM() {
   document.getElementById('team_name').innerHTML = `<strong>Team </strong>${players[ID].team}`
   document.getElementById('nick').innerHTML = `<strong>Nick </strong>${players[ID].nickName}`
 
+  updateTeamScore()
+  AddTeamPointsBoard()
+
   const shipsWithZeroLives = []
   
   for (const [key, value] of Object.entries(ships)) {
-    if(ships[key].lives === 0)
-      shipsWithZeroLives.push(ships[key])      
-    }
+    if(ships[key].lives === 0) {
+      removeLives(document.getElementById(`live${key}${ships[key].lives+1}`),key) 
+      shipsWithZeroLives.push(ships[key]) 
+    }     
+  }
 
-    shipsWithZeroLives.map( ship => {
-      delete ships[ship.id]
-    })
+  shipsWithZeroLives.map( ship => {
+    delete ships[ship.id]
+  })
 
   // uncomment when corrected
-  updateTeamScore()
-  addLeaderBoard()
+  
 }
 
 async function loadLogin(){
@@ -233,48 +238,8 @@ function getFormInfo(){
   return dataDict
 }
 
-function addLeaderBoard(){
-  let parent
-  for (let [key, ship] of Object.entries(ships)) {
-    const team = players[ship.id].team
-    if (!document.getElementById(`p+${key}`)) {
-      let element = document.createElement("div")
-      element.id =  `p+${key}`
-      const nick = players[ship.id].nickName
-      let node = document.createTextNode(`${nick}`)
-      element.appendChild(node)
-      if (team === "Klingon"){
-        parent = document.getElementById("Klingon-score")
-        parent.appendChild(element)
-        element.style.border = "2px solid rgba(25,255,255,255);";
-        paintLives(key,element,team)
-      } else{
-        parent = document.getElementById("Federation-score")
-        parent.appendChild(element)
-        element.style.border = "2px solid rgba(245,97,30,255);";
-        paintLives(key,element,team)
-      }
-    }else{
-      let element = document.getElementById(`p+${key}`)
-      paintLives(key, element, team)
-    }
-  }
-}
 
 
-function paintLives(idStarShip,element, team){
-  const parent = element
-  const lives = ships[idStarShip].lives
-  const color = (team === "Klingon") ? "rgba(25,255,255,255)" : "rgba(245,97,30,255)"
-  for (let i = 0; i < lives; i++) {
-    if (!document.getElementById(`live${idStarShip}${i+1}`)) {
-    let element = document.createElement("div")
-    element.id = `live${idStarShip}${i+1}`
-    element.style = `width:5px;height:10px;border:1px solid ${color}; background:${color};float: left; margin-left: 2px;`
-    parent.appendChild(element)
-    }
-  }
-}
 
 /* }else{
   document.getElementById(`p+${key}`).innerHTML = `${players[ship.id].nickName}`
