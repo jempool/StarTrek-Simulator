@@ -10,3 +10,5 @@ tools/data/
 *.code-workspace
 
 .directory
+firebase.json
+.firebaserc
