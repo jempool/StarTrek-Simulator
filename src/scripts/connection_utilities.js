@@ -51,9 +51,8 @@ function resolveMessage(msj, ownID, ships, client, channel, players, ownSpritePa
           bullet.play()
           bullet.setState(1, 0)          
         }
-  
-
       default:
         console.log("A default test")
-    }
+  }
+  persistSession()
 }
