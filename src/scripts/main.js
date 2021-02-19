@@ -132,8 +132,6 @@ function updateUserStatusInDOM() {
   shipsWithZeroLives.map( ship => {
     delete ships[ship.id]
   })
-
-  // uncomment when corrected
   
 }
 
@@ -249,13 +247,6 @@ function getFormInfo(){
   return dataDict
 }
 
-
-
-
-/* }else{
-  document.getElementById(`p+${key}`).innerHTML = `${players[ship.id].nickName}`
-  orderLeaderBoard()
-} */
 
 
 
