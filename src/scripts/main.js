@@ -229,7 +229,7 @@ async function loadGame(dataDict){
 
   const batship = StarShip.create(galaxy, dataDict["starship"], 'small batship', x, y, angle, ID, teamStyle)
   batship.add
-  batship.play(channel)
+  batship.play(channel, client)
   addKeyEvent(batship, bulletImgPath)
 
   const player = Player.create(NICKNAME, TEAM, ID)
