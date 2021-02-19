@@ -80,13 +80,12 @@ class StarShip {
     
     if (this.lives === 0) {
       this.health = 0
-      
-    let thisShip = document.getElementById(this.id)
-    thisShip.parentNode.removeChild(thisShip)
-    
+      let thisShip = document.getElementById(this.id)
+      thisShip.parentNode.removeChild(thisShip)
+    }
 
-    if(ships[ID].lives === 0)
-      document.getElementById('status').innerHTML = `Game Over`
+    if(ships[ID].lives === 0){
+      changeGameState('lose')
     }
   }
 
