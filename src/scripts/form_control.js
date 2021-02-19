@@ -132,7 +132,7 @@ function loadCreateRoom(){
 
     document.getElementsByClassName('join-box')[0].style.display = "none"
     document.getElementsByClassName('create-box')[0].style.display = "block"
-    document.getElementById('code').style.visibility = "hidden"
+    document.getElementById('code').style.display = "none"
 
     const create_btn = document.getElementsByClassName('create')[0]
     create_btn.style.background = "rgba(1,125,87,255)"
@@ -149,7 +149,7 @@ function loadJoinRoom(){
   
     document.getElementsByClassName('join-box')[0].style.display = "block"
     document.getElementsByClassName('create-box')[0].style.display = "none"
-    document.getElementById('code').style.visibility = "visible"
+    document.getElementById('code').style.display = "block"
     const join_btn = document.getElementsByClassName('join')[0]
     join_btn.style.background = "rgba(1,125,87,255)"
     join_btn.style.color = "white" 

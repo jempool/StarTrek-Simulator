@@ -21,3 +21,26 @@ function getLetterRandomCode(){
 function getRandomPosition(minValue, maxValue) {
   return Math.random() * (maxValue - minValue) + minValue;
 }
+
+function updateTeamScore(){
+  const parent = document.getElementById("team-score-board")
+  let klingon_points = 0
+  let federation_points = 0
+  for (let [key, ship] of Object.entries(ships)) {
+    const team = players[key].team
+    if (team == "Klingon"){
+      klingon_points += ship.points
+    }else{
+      federation_points += ship.points
+    }
+   }
+  //Include points in DOM
+  includePointsDOM(klingon_points,federation_points)
+
+  //Order Teams Score
+  klingon_points >= federation_points?
+    parent.appendChild(document.getElementById(`Federation-score`)) :
+    parent.appendChild(document.getElementById(`Klingon-score`))
+  
+}
+
