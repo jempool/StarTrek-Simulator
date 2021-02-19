@@ -4,9 +4,9 @@ class Bullet {
     this.setState()
     this.setAngle(angle)
     this.setPosition(x, y)
-    this.setVisibility(true)
+    this.setVisibility(Settings.initialBulletVisibility)
     this.id = id
-    this.speed = 10
+    this.speed = Settings.bulletSpeed
     this.width = document.getElementsByClassName(this.el.className)[0].width
     this.height = document.getElementsByClassName(this.el.className)[0].height
     this.radio = this.height/2
@@ -31,7 +31,7 @@ class Bullet {
 
     } else {
     
-      const window_width = document.getElementById('galaxy').clientWidth - document.getElementById('leaderboard').clientWidth
+      const window_width = document.getElementById('galaxy').clientWidth - document.getElementById('team-score-board').clientWidth
       const window_height = document.getElementById('galaxy').clientHeight
 
       const xAxisUpperLimitExceeded = x <= 0
@@ -53,8 +53,8 @@ class Bullet {
       this.x = x
       this.y = y
 
-      this.el.style.left = `${x + 18}px`
-      this.el.style.top = `${y + 18}px`
+      this.el.style.left = `${x + Settings.bulletOffset}px`
+      this.el.style.top = `${y + Settings.bulletOffset}px`
     }
   }
 
@@ -79,7 +79,7 @@ class Bullet {
       this.setPosition(x, y)
       this.setAngle(angle)
       this.detectCollision()
-    }, 1000/24)
+    }, Settings.refreshRateOfGame )
   }
 
   detectCollision(){
@@ -102,7 +102,7 @@ class Bullet {
           }
         } 
       })
-    },250)
+    }, Settings.collisionDetectionRate )
   }
 
   haveCollided(bullet, player) {
@@ -110,8 +110,8 @@ class Bullet {
   }
 
   updatePointsAndHealth (myId, enemyId){        
-    ships[myId].points += 10
-    ships[enemyId].health -= 25 
+    ships[myId].points += Settings.pointsPerShoot
+    ships[enemyId].health -= Settings.damagePerShoot
     
     // 'Shooter' status after shooting
     client.publish(channel, { 
@@ -142,7 +142,7 @@ class Bullet {
       let bullet = document.getElementById(id)
       bullet.parentNode.removeChild(bullet)
       clearInterval(bulletLifespan)
-    }, 2000);
+    }, Settings.bulletLifeTime );
 
     // Creation of the element 'bullet' in the DOM
     const img = document.createElement('img')
