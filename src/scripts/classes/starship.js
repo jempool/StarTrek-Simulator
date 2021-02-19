@@ -4,15 +4,15 @@ class StarShip {
     this.setState()
     this.setAngle(angle)
     this.setPosition(x, y)
-    this.setVisibility(true)
-    this.speed = 4
+    this.setVisibility(Settings.initialStarshipVisibility)
+    this.speed = Settings.starshipSpeed
     this.ship_width = document.getElementsByClassName(this.el.className)[0].width
     this.ship_height = document.getElementsByClassName(this.el.className)[0].height
     this.radio = this.ship_height/2
     this.id = id
-    this.health = 100
-    this.points = 0
-    this.lives = 3    
+    this.health = Settings.initialHealth
+    this.points = Settings.initialPoints
+    this.lives = Settings.initialLives  
   }
 
   setState(go = 0, direction = 0) {
@@ -26,7 +26,7 @@ class StarShip {
 
   setPosition(x, y) {
 
-    const window_width= document.getElementById('galaxy').clientWidth - document.getElementById('leaderboard').clientWidth
+    const window_width= document.getElementById('galaxy').clientWidth - document.getElementById('team-score-board').clientWidth
     const window_height= document.getElementById('galaxy').clientHeight 
 
     const xAxisUpperLimitExceeded = x <= 0
@@ -69,7 +69,7 @@ class StarShip {
     this.health = health
 
     if (this.health <= 0) {
-      this.health = 100
+      this.health = Settings.initialHealth
       this.lives = this.lives - 1
     }
     
@@ -78,10 +78,10 @@ class StarShip {
       
     let thisShip = document.getElementById(this.id)
     thisShip.parentNode.removeChild(thisShip)
+    
 
     if(ships[ID].lives === 0)
       document.getElementById('status').innerHTML = `Game Over`
-
     }
   }
 
@@ -100,8 +100,8 @@ class StarShip {
       const { go, direction } = this.state  
       if (go === 0 && direction === 0) return;
 
-
-      const angle = (this.angle + direction*5) % 360
+      const rotationSpeed = Settings.starshipSpeed
+      const angle = (this.angle + direction * rotationSpeed) % 360
       const x = this.x + Math.sin(this.angle / 360.0 * 2 * Math.PI) * go * this.speed
       const y = this.y - Math.cos(this.angle / 360.0 * 2 * Math.PI) * go * this.speed
   
@@ -109,7 +109,7 @@ class StarShip {
       this.setAngle(angle)
 
       client.publish(channel, { type: "Ship movement", id: ID, x: x, y: y, angle: angle })
-    }, 1000/24)
+    }, Settings.refreshRateOfGame )
   }
 
 
