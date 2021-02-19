@@ -3,6 +3,7 @@ function resolveMessage(msj, ownID, ships, client, channel, players, ownSpritePa
       case "arrival":
         console.log("A new contender has just arrived!!!!")
         console.log(msj.id)
+        
 
         if(msj.id != ownID) {
           console.log("New ship, id:")
@@ -13,6 +14,7 @@ function resolveMessage(msj, ownID, ships, client, channel, players, ownSpritePa
           players[msj.id] = player
           console.log(msj.id)
           client.publish(channel, { type: "Existence notification", id: ID, x: ships[ID].x, y: ships[ID].y, angle: ships[ID].angle, sprite: ownSpritePath, health: ships[ID].health, points: ships[ID].points, nickname: NICKNAME, team: TEAM, teamStyle: ownTeamStyle })
+          AddTeamPointsBoard()
         }
         break;
       case "Existence notification":
@@ -27,6 +29,8 @@ function resolveMessage(msj, ownID, ships, client, channel, players, ownSpritePa
           ships[msj.id].setHealth(msj.health)
           ships[msj.id].setPoints(msj.points)
           players[msj.id] = player
+          AddTeamPointsBoard()
+
         }
         break;
       case "Ship movement":

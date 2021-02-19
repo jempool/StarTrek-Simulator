@@ -10,6 +10,6 @@ tools/data/
 *.code-workspace
 
 .directory
-firebase.json
 .firebaserc
+firebase.json
 .firebase/hosting.c3Jj.cache

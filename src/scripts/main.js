@@ -134,8 +134,6 @@ function updateUserStatusInDOM() {
   shipsWithZeroLives.map( ship => {
     delete ships[ship.id]
   })
-
-  // uncomment when corrected
   
 }
 
@@ -297,12 +295,6 @@ function getFormInfo(){
 }
 
 
-
-
-/* }else{
-  document.getElementById(`p+${key}`).innerHTML = `${players[ship.id].nickName}`
-  orderLeaderBoard()
-} */
 function reloadInfo(){
   let parsed_player = JSON.parse(window.sessionStorage.getItem('player'));
   let parsed_ship = JSON.parse(window.sessionStorage.getItem('ship'));
@@ -321,35 +313,26 @@ function reloadInfo(){
   return dataDict
 }
 
-function updateTeamScore(){
-  const parent = document.getElementById("leaderboard")
-  let klingon_points = 0
-  let federation_points = 0
-  for (let [key, ship] of Object.entries(ships)) {
-    const team = players[key].team
-    const element = document.getElementById(`${team}-score`)
-    const scoreElement = element.getElementsByClassName("team-score")[0]
-    if (team == "Klingon"){
-      klingon_points += ship.points
-    }else{
-      federation_points += ship.points
-    }
-  }
 
-  //Include points in DOM
-  console.log(klingon_points, federation_points)
-  const klingon_element = document.getElementById(`Klingon-score`).getElementsByClassName("team-score")[0]
-  klingon_element.innerHTML = `Score: <strong> ${klingon_points} </strong>`
-  const federation_element = document.getElementById(`Federation-score`).getElementsByClassName("team-score")[0]
-  federation_element.innerHTML = `Score: <strong> ${federation_points} </strong>`
-
-  //Order Teams Score
-  if (klingon_points >= federation_points){
-    parent.appendChild(document.getElementById(`Federation-score`))
-  }else{
-    parent.appendChild(document.getElementById(`Klingon-score`))
-  }
+function reloadInfo(){
+  let parsed_player = JSON.parse(window.sessionStorage.getItem('player'));
+  let parsed_ship = JSON.parse(window.sessionStorage.getItem('ship'));
+  dataDict["ID"] = parsed_player.id
+  dataDict["nickName"] = parsed_player.nickname
+  dataDict["starship"] = parsed_ship.imagePath
+  dataDict["team"] = parsed_player.team
+  dataDict["x"] = parsed_ship.x
+  dataDict["y"] = parsed_ship.y
+  dataDict["angle"] = parsed_ship.angle
+  dataDict["room"] = window.sessionStorage.getItem('room')
+  ID = dataDict["ID"]
+  TEAM = dataDict["team"]
+  NICKNAME = dataDict["nickName"]
+  ROOM = dataDict['room']
+  return dataDict
 }
+
+
 
 async function main() {
   let session_room = window.sessionStorage.getItem('room')
