@@ -99,7 +99,7 @@ class StarShip {
 
  
 
-  play(channel) {
+  play(channel, client) {
     this.timer = setInterval(()=> {
       const { go, direction } = this.state  
       if (go === 0 && direction === 0) return;
