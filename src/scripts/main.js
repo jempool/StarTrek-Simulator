@@ -141,7 +141,7 @@ function updateUserStatusInDOM() {
     let teamWon = true
     for (const [key, value] of Object.entries(ships)) {
       console.log("CHECKING TEAMS LEFT")
-      if (ships[key].team !== ships[ID].team){
+      if (ships[key] !== undefined && ships[key].team !== ships[ID].team){
         teamWon = false
         console.log("EXISTED SHIPS")
       }
@@ -264,9 +264,11 @@ function convertShipToJson(ship){
 function persistSession(){
   if (typeof(Storage) !== 'undefined') {
     console.log('STORING DATA...')
-    window.sessionStorage.setItem('ship', JSON.stringify(convertShipToJson(ships[ID])))
-    window.sessionStorage.setItem('player', JSON.stringify(convertPlayerToJson(players[ID])))
-    window.sessionStorage.setItem('room', ROOM)
+    if (ships !== undefined && ships[ID] !== undefined && players[ID] !== undefined){
+      window.sessionStorage.setItem('ship', JSON.stringify(convertShipToJson(ships[ID])))
+      window.sessionStorage.setItem('player', JSON.stringify(convertPlayerToJson(players[ID])))
+      window.sessionStorage.setItem('room', ROOM)
+    }
   } else {
     console.log('This browser does not support storage')
   }
