@@ -215,7 +215,7 @@ async function loadGame(dataDict){
   this.updateUserStatusInDOM()
   persistanceInterval = window.setInterval(function(){
     persistSession()
-  }, 5000);
+  }, 2000);
 }
 
 function convertPlayerToJson(player){
