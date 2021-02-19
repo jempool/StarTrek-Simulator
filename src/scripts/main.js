@@ -9,6 +9,7 @@ let galaxy = {}
 let ships = {}
 let players = {}
 let dataDict = {}
+let persistanceInterval = null
 // const points ={"Klingon":0,"Federation":0}
 
 const rabbitmqSettings = {
@@ -130,18 +131,32 @@ function updateUserStatusInDOM() {
       shipsWithZeroLives.push(ships[key]) 
     }     
   }
-
+  let existedShips = false
   shipsWithZeroLives.map( ship => {
+    existedShips = true
     delete ships[ship.id]
+    console.log("EXISTED SHIPS")
   })
-  
+  if (existedShips){
+    let teamWon = true
+    for (const [key, value] of Object.entries(ships)) {
+      console.log("CHECKING TEAMS LEFT")
+      if (ships[key].team !== ships[ID].team){
+        teamWon = false
+        console.log("EXISTED SHIPS")
+      }
+    }
+    if (teamWon){
+      changeGameState('win')
+    }
+  }
 }
 
 async function loadLogin(){
   const create_btn = document.getElementsByClassName('create')[0]
   create_btn.style.background = "none"
   create_btn.style.color = "rgb(52, 52, 52)"
-
+  clearForm()
   addStarshipEventListeners()
   // Close all dropdowns when selected element is outside
   window.addEventListener('click', function(e) {
@@ -151,6 +166,17 @@ async function loadLogin(){
       }
     }
   });
+}
+
+function clearForm(){
+  document.getElementById('nickName').value = null
+  document.getElementById('code').value = null
+  ships = {}
+  players = {}
+  dataDict = {}
+  NICKNAME = ''
+  TEAM = ''
+  ROOM = ''
 }
 
 function addStarshipEventListeners(){
@@ -247,7 +273,7 @@ function persistSession(){
 }
 
 function cleanSession(){
-  sessionStorage.clear()
+  window.sessionStorage.clear()
   clearInterval(persistanceInterval)
 }
 
@@ -257,6 +283,7 @@ function changeGameState(state, dataDict){
       console.log('Changing to login configuration')
       setUiLoginDisplay()
       loadLogin()
+      cleanSession()
       break
     case 'game':
       console.log('Changing to game configuration')
@@ -312,26 +339,6 @@ function reloadInfo(){
   ROOM = dataDict['room']
   return dataDict
 }
-
-
-function reloadInfo(){
-  let parsed_player = JSON.parse(window.sessionStorage.getItem('player'));
-  let parsed_ship = JSON.parse(window.sessionStorage.getItem('ship'));
-  dataDict["ID"] = parsed_player.id
-  dataDict["nickName"] = parsed_player.nickname
-  dataDict["starship"] = parsed_ship.imagePath
-  dataDict["team"] = parsed_player.team
-  dataDict["x"] = parsed_ship.x
-  dataDict["y"] = parsed_ship.y
-  dataDict["angle"] = parsed_ship.angle
-  dataDict["room"] = window.sessionStorage.getItem('room')
-  ID = dataDict["ID"]
-  TEAM = dataDict["team"]
-  NICKNAME = dataDict["nickName"]
-  ROOM = dataDict['room']
-  return dataDict
-}
-
 
 
 async function main() {
