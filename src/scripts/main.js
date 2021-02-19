@@ -8,6 +8,7 @@ let channel = Connection.rabbitmqDefaultChannel
 let galaxy = {}
 let ships = {}
 let players = {}
+let dataDict = {}
 // const points ={"Klingon":0,"Federation":0}
 
 const rabbitmqSettings = {
@@ -175,10 +176,14 @@ async function loadGame(dataDict){
   galaxy = document.getElementById('galaxy')
   document.getElementById('room_code').innerHTML = "Room code: " + ROOM
 
-  let galaxyWidth = galaxy.offsetWidth
-  let galaxyHeight = galaxy.offsetHeight
-  let y = getRandomPosition(0, galaxyHeight)
-  let x = getRandomPosition(0, galaxyWidth)
+  let y = getRandomPosition(0, galaxy.offsetHeight)
+  let x = getRandomPosition(0, galaxy.offsetWidth)
+  let angle = 45
+  if (dataDict['x'] !== undefined && dataDict['y'] !== undefined && dataDict['angle']){
+    x = dataDict['x']
+    y = dataDict['y']
+    angle = dataDict['angle']
+  }
 
   let teamStyle = ''
   let bulletImgPath = ''
@@ -196,7 +201,7 @@ async function loadGame(dataDict){
   let channel = 'teamName/topic'
   channel += ROOM
 
-  const batship = StarShip.create(galaxy, dataDict["starship"], 'small batship', x, y, 45, ID, teamStyle)
+  const batship = StarShip.create(galaxy, dataDict["starship"], 'small batship', x, y, angle, ID, teamStyle)
   batship.add
   batship.play(channel)
   addKeyEvent(batship, bulletImgPath)
@@ -206,7 +211,44 @@ async function loadGame(dataDict){
 
   ships[ID] = batship
   players[ID] = player
+  console.log(JSON.stringify(convertPlayerToJson(players[ID])))
   this.updateUserStatusInDOM()
+  persistanceInterval = window.setInterval(function(){
+    persistSession()
+  }, 5000);
+}
+
+function convertPlayerToJson(player){
+  return {
+    id : player.id,
+    nickname : player.nickName,
+    team : player.team
+  }
+}
+
+function convertShipToJson(ship){
+  return {
+    x : ship.x,
+    y : ship.y,
+    angle : ship.angle,
+    imagePath : ship.imagePath
+  }
+}
+
+function persistSession(){
+  if (typeof(Storage) !== 'undefined') {
+    console.log('STORING DATA...')
+    window.sessionStorage.setItem('ship', JSON.stringify(convertShipToJson(ships[ID])))
+    window.sessionStorage.setItem('player', JSON.stringify(convertPlayerToJson(players[ID])))
+    window.sessionStorage.setItem('room', ROOM)
+  } else {
+    console.log('This browser does not support storage')
+  }
+}
+
+function cleanSession(){
+  sessionStorage.clear()
+  clearInterval(persistanceInterval)
 }
 
 function changeGameState(state, dataDict){
@@ -224,16 +266,17 @@ function changeGameState(state, dataDict){
     case 'win':
       console.log('Changing to win configuration')
       setUiWinDisplay()
+      cleanSession()
       break
     case 'lose':
       console.log('Changing to lose configuration')
       setUiLoseDisplay()
+      cleanSession()
       break
     }
 }
 
 function getFormInfo(){
-  dataDict = {}
   const nickName = document.getElementById('nickName').value
   const genderIndex = document.getElementById('gender')
   const gender = genderIndex.options[genderIndex.selectedIndex].text
@@ -252,7 +295,32 @@ function getFormInfo(){
 }
 
 
+function reloadInfo(){
+  let parsed_player = JSON.parse(window.sessionStorage.getItem('player'));
+  let parsed_ship = JSON.parse(window.sessionStorage.getItem('ship'));
+  dataDict["ID"] = parsed_player.id
+  dataDict["nickName"] = parsed_player.nickname
+  dataDict["starship"] = parsed_ship.imagePath
+  dataDict["team"] = parsed_player.team
+  dataDict["x"] = parsed_ship.x
+  dataDict["y"] = parsed_ship.y
+  dataDict["angle"] = parsed_ship.angle
+  dataDict["room"] = window.sessionStorage.getItem('room')
+  ID = dataDict["ID"]
+  TEAM = dataDict["team"]
+  NICKNAME = dataDict["nickName"]
+  ROOM = dataDict['room']
+  return dataDict
+}
+
 
 async function main() {
-  changeGameState('login')
+  let session_room = window.sessionStorage.getItem('room')
+  if (session_room !== undefined && session_room !== null){
+    dataDict = reloadInfo()
+    changeGameState('game', dataDict)
+  }
+  else{
+    changeGameState('login')
+  }
 }

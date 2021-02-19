@@ -34,13 +34,13 @@ function AddTeamPointsBoard(){
     const lives = ships[idStarShip].lives
     const color = (team === "Klingon") ? "rgba(25,255,255,255)" : "rgba(245,97,30,255)"
     for (let i = 0; i < lives; i++) {
-      if (!document.getElementById(`live${idStarShip}${i+1}`) && lives === 3) {
+      if (!document.getElementById(`live${idStarShip}${i+1}`) && lives === Settings.initialLives ) {
         const element = document.createElement("div")
         element.id = `live${idStarShip}${i+1}`
         element.style = `width:5px;height:10px;border:1px solid ${color}; background:${color};float: left; margin-left: 3px; margin-top: 2px`
         parent.appendChild(element)
       } else{
-        if (lives < 3 /* Change by global*/) {
+        if (lives < Settings.initialLives) {
           const element = document.getElementById(`live${idStarShip}${lives+1}`)
           if(element){
             removeLives(element, idStarShip)

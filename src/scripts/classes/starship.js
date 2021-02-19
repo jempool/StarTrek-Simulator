@@ -1,9 +1,10 @@
 class StarShip {   
-  constructor(el, x = 0, y = 0, angle = 0, id) {
+  constructor(el, x = 0, y = 0, angle = 0, id, imagePath) {
     this.el = el
     this.setState()
     this.setAngle(angle)
     this.setPosition(x, y)
+    this.setImagePath(imagePath)
     this.setVisibility(Settings.initialStarshipVisibility)
     this.speed = Settings.starshipSpeed
     this.ship_width = document.getElementsByClassName(this.el.className)[0].width
@@ -51,6 +52,10 @@ class StarShip {
     this.el.style.left = `${x}px`
     this.el.style.top = `${y}px`
 
+  }
+
+  setImagePath(imagePath){
+    this.imagePath = imagePath
   }
 
   getX(){
@@ -123,6 +128,6 @@ class StarShip {
     img.id = id
     parent.appendChild(img)
    
-    return new StarShip(img, x, y, angle, id)
+    return new StarShip(img, x, y, angle, id, imagePath)
   }
 }
