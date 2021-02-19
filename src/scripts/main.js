@@ -314,6 +314,26 @@ function reloadInfo(){
 }
 
 
+function reloadInfo(){
+  let parsed_player = JSON.parse(window.sessionStorage.getItem('player'));
+  let parsed_ship = JSON.parse(window.sessionStorage.getItem('ship'));
+  dataDict["ID"] = parsed_player.id
+  dataDict["nickName"] = parsed_player.nickname
+  dataDict["starship"] = parsed_ship.imagePath
+  dataDict["team"] = parsed_player.team
+  dataDict["x"] = parsed_ship.x
+  dataDict["y"] = parsed_ship.y
+  dataDict["angle"] = parsed_ship.angle
+  dataDict["room"] = window.sessionStorage.getItem('room')
+  ID = dataDict["ID"]
+  TEAM = dataDict["team"]
+  NICKNAME = dataDict["nickName"]
+  ROOM = dataDict['room']
+  return dataDict
+}
+
+
+
 async function main() {
   let session_room = window.sessionStorage.getItem('room')
   if (session_room !== undefined && session_room !== null){
