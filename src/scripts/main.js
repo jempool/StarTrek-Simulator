@@ -49,7 +49,7 @@ async function connect(options, spritePath, battleshipXPos, battleshipYPos, team
 }
 
 
-function addKeyEvent(batship) {
+function addKeyEvent(batship, bulletImgPath) {
   const up = ['w', 'ArrowUp']
   const down = ['s', 'ArrowDown']
   const left = ['a', 'ArrowLeft']
@@ -75,7 +75,7 @@ function addKeyEvent(batship) {
   
         if(!lockedShot){
           const bulletId = Date.now()
-          const bullet = Bullet.create(galaxy, './assets/spaceship/bullet.png', 
+          const bullet = Bullet.create(galaxy, bulletImgPath, 
           batship.getX(), batship.getY(), batship.getAngle(), bulletId, false)
           bullet.play()
           bullet.setState(1, 0)
@@ -92,7 +92,8 @@ function addKeyEvent(batship) {
           x: ships[ID].x,
           y: ships[ID].y,  
           angle: ships[ID].angle,
-          team: TEAM
+          team: TEAM,
+          bulletImgPath: bulletImgPath
         })
         } 
     }      
@@ -177,10 +178,13 @@ async function loadGame(dataDict){
   let x = getRandomPosition(0, galaxyWidth)
 
   let teamStyle = ''
+  let bulletImgPath = ''
   if (dataDict["team"] == "Klingon") {
     teamStyle = 'klingonStarship'
+    bulletImgPath = './assets/spaceship/blueBullet.png'
   } else {
     teamStyle = 'federationStarship'
+    bulletImgPath = './assets/spaceship/redBullet.png'
   }
 
   console.log('Connecting to RabbitMQ/MQTT over WebSocket')
@@ -192,7 +196,7 @@ async function loadGame(dataDict){
   const batship = StarShip.create(galaxy, dataDict["starship"], 'small batship', x, y, 45, ID, teamStyle)
   batship.add
   batship.play(channel)
-  addKeyEvent(batship)
+  addKeyEvent(batship, bulletImgPath)
 
   const player = Player.create(NICKNAME, TEAM, ID)
   console.log('Creating player object...' + player.team + player.id + player.nickName)
