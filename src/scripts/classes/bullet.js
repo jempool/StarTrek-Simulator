@@ -31,7 +31,7 @@ class Bullet {
 
     } else {
     
-      const window_width = document.getElementById('galaxy').clientWidth - document.getElementById('leaderboard').clientWidth
+      const window_width = document.getElementById('galaxy').clientWidth - document.getElementById('team-score-board').clientWidth
       const window_height = document.getElementById('galaxy').clientHeight
 
       const xAxisUpperLimitExceeded = x <= 0

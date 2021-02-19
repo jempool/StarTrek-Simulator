@@ -26,7 +26,7 @@ class StarShip {
 
   setPosition(x, y) {
 
-    const window_width= document.getElementById('galaxy').clientWidth - document.getElementById('leaderboard').clientWidth
+    const window_width= document.getElementById('galaxy').clientWidth - document.getElementById('team-score-board').clientWidth
     const window_height= document.getElementById('galaxy').clientHeight 
 
     const xAxisUpperLimitExceeded = x <= 0
@@ -78,10 +78,10 @@ class StarShip {
       
     let thisShip = document.getElementById(this.id)
     thisShip.parentNode.removeChild(thisShip)
+    
 
     if(ships[ID].lives === 0)
       document.getElementById('status').innerHTML = `Game Over`
-
     }
   }
 

@@ -8,6 +8,7 @@ let channel = Connection.rabbitmqDefaultChannel
 let galaxy = {}
 let ships = {}
 let players = {}
+// const points ={"Klingon":0,"Federation":0}
 
 const rabbitmqSettings = {
   username: Connection.rabbitmqUsername,
@@ -116,20 +117,24 @@ function updateUserStatusInDOM() {
   document.getElementById('team_name').innerHTML = `<strong>Team </strong>${players[ID].team}`
   document.getElementById('nick').innerHTML = `<strong>Nick </strong>${players[ID].nickName}`
 
+  updateTeamScore()
+  AddTeamPointsBoard()
+
   const shipsWithZeroLives = []
   
   for (const [key, value] of Object.entries(ships)) {
-    if(ships[key].lives === 0)
-      shipsWithZeroLives.push(ships[key])      
-    }
+    if(ships[key].lives === 0) {
+      removeLives(document.getElementById(`live${key}${ships[key].lives+1}`),key) 
+      shipsWithZeroLives.push(ships[key]) 
+    }     
+  }
 
-    shipsWithZeroLives.map( ship => {
-      delete ships[ship.id]
-    })
+  shipsWithZeroLives.map( ship => {
+    delete ships[ship.id]
+  })
 
   // uncomment when corrected
-  updateTeamScore()
-  addLeaderBoard()
+  
 }
 
 async function loadLogin(){
@@ -244,64 +249,13 @@ function getFormInfo(){
   return dataDict
 }
 
-function addLeaderBoard(){
-  let parent
-  for (let [key, ship] of Object.entries(ships)) {
-    if (!document.getElementById(`p+${key}`)) {
-      let element = document.createElement("p")
-      element.id =  `p+${key}`
-      const nick = players[ship.id].nickName
-      const team = players[ship.id].team
-      let node = document.createTextNode(`${nick}`)
-      element.appendChild(node)
-      if (team == "Klingon"){
-        parent = document.getElementById("Klingon-score")
-        parent.appendChild(element)
-        element.style.border = "2px solid rgba(25,255,255,255)";
-      } else{
-        parent = document.getElementById("Federation-score")
-        parent.appendChild(element)
-        element.style.border = "2px solid rgba(245,97,30,255)";
-      }
-    }
-  }
-}
+
+
 
 /* }else{
   document.getElementById(`p+${key}`).innerHTML = `${players[ship.id].nickName}`
   orderLeaderBoard()
 } */
-
-function updateTeamScore(){
-  const parent = document.getElementById("leaderboard")
-  let klingon_points = Settings.initialPoints
-  let federation_points = Settings.initialPoints
-  for (let [key, ship] of Object.entries(ships)) {
-    const team = players[key].team
-    const element = document.getElementById(`${team}-score`)
-    const scoreElement = element.getElementsByClassName("team-score")[0]
-    if (team == "Klingon"){
-      klingon_points += ship.points
-    }else{
-      federation_points += ship.points
-    }
-  }
-
-  //Include points in DOM
-  console.log(klingon_points, federation_points)
-  const klingon_element = document.getElementById(`Klingon-score`).getElementsByClassName("team-score")[0]
-  klingon_element.innerHTML = `Score: <strong> ${klingon_points} </strong>`
-  const federation_element = document.getElementById(`Federation-score`).getElementsByClassName("team-score")[0]
-  federation_element.innerHTML = `Score: <strong> ${federation_points} </strong>`
-
-  //Order Teams Score
-  if (klingon_points >= federation_points){
-    parent.appendChild(document.getElementById(`Federation-score`))
-  }else{
-    parent.appendChild(document.getElementById(`Klingon-score`))
-  }
-  
-}
 
 async function main() {
   changeGameState('login')
