@@ -1,9 +1,9 @@
 let ROOM = ''
 let ID = ''
-let NICKNAME = "SHA"
-const GENDER = "M"
-let TEAM = "1"
-let channel = 'teamName/topic'
+let NICKNAME = ""
+const GENDER = ""
+let TEAM = ""
+let channel = Connection.rabbitmqDefaultChannel
 
 let galaxy = {}
 let ships = {}
@@ -11,13 +11,13 @@ let players = {}
 // const points ={"Klingon":0,"Federation":0}
 
 const rabbitmqSettings = {
-  username: 'admin',
-  password: 'admin',
-  host: 'frontend.ascuy.me',
-  port: 443,
-  ssl: true,
-  keepalive: 20,
-  path: 'ws'
+  username: Connection.rabbitmqUsername,
+  password: Connection.rabbitmqPassword,
+  host: Connection.rabbitmqHost,
+  port: Connection.rabbitmqPort,
+  ssl: Connection.rabbitmqSSL,
+  keepalive: Connection.rabbitmqKeepalive,
+  path: Connection.rabbitmqPath
  }
 
 const spritePaths = {
@@ -83,7 +83,7 @@ function addKeyEvent(batship, bulletImgPath) {
           lockedShot = true
           setTimeout(() => {
             lockedShot = false
-          }, 200);
+          }, Settings.waitBetweenShoots );
   
         // broadcast the bullet movement to the other players
         client.publish(channel, { 
@@ -260,8 +260,6 @@ function getFormInfo(){
   document.getElementById(`p+${key}`).innerHTML = `${players[ship.id].nickName}`
   orderLeaderBoard()
 } */
-
-
 
 async function main() {
   changeGameState('login')
