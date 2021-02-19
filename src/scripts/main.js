@@ -8,6 +8,7 @@ let channel = 'teamName/topic'
 let galaxy = {}
 let ships = {}
 let players = {}
+let dataDict = {}
 
 const rabbitmqSettings = {
   username: 'admin',
@@ -171,20 +172,14 @@ async function loadGame(dataDict){
   galaxy = document.getElementById('galaxy')
   document.getElementById('room_code').innerHTML = "Room code: " + ROOM
 
-  let x = 0
-  let y = 0
-  let angle = 0
+  let y = getRandomPosition(0, galaxy.offsetHeight)
+  let x = getRandomPosition(0, galaxy.offsetWidth)
+  let angle = 45
   if (dataDict['x'] !== undefined && dataDict['y'] !== undefined && dataDict['angle']){
     x = dataDict['x']
     y = dataDict['y']
     angle = dataDict['angle']
   }
-  else
-  let galaxyWidth = galaxy.offsetWidth
-  let galaxyHeight = galaxy.offsetHeight
-  y = getRandomPosition(0, galaxyHeight)
-  x = getRandomPosition(0, galaxyWidth)
-  angle = 45
 
   let teamStyle = ''
   if (dataDict["team"] == "Klingon") {
@@ -209,14 +204,17 @@ async function loadGame(dataDict){
 
   ships[ID] = batship
   players[ID] = player
+  console.log(JSON.stringify(convertPlayerToJson(players[ID])))
   this.updateUserStatusInDOM()
-  persistSession()
+  persistanceInterval = window.setInterval(function(){
+    persistSession()
+  }, 5000);
 }
 
 function convertPlayerToJson(player){
   return {
     id : player.id,
-    nickname : player.nickname,
+    nickname : player.nickName,
     team : player.team
   }
 }
@@ -243,6 +241,7 @@ function persistSession(){
 
 function cleanSession(){
   sessionStorage.clear()
+  clearInterval(persistanceInterval)
 }
 
 function changeGameState(state, dataDict){
@@ -271,7 +270,6 @@ function changeGameState(state, dataDict){
 }
 
 function getFormInfo(){
-  dataDict = {}
   const nickName = document.getElementById('nickName').value
   const genderIndex = document.getElementById('gender')
   const gender = genderIndex.options[genderIndex.selectedIndex].text
@@ -317,7 +315,6 @@ function addLeaderBoard(){
   orderLeaderBoard()
 } */
 function reloadInfo(){
-  dataDict = {}
   let parsed_player = JSON.parse(window.sessionStorage.getItem('player'));
   let parsed_ship = JSON.parse(window.sessionStorage.getItem('ship'));
   dataDict["ID"] = parsed_player.id
@@ -327,11 +324,12 @@ function reloadInfo(){
   dataDict["x"] = parsed_ship.x
   dataDict["y"] = parsed_ship.y
   dataDict["angle"] = parsed_ship.angle
-  //dataDict["gender"] = gender
+  dataDict["room"] = window.sessionStorage.getItem('room')
   ID = dataDict["ID"]
   TEAM = dataDict["team"]
   NICKNAME = dataDict["nickName"]
-  console.log("PLAYER " + parsed_player.id)
+  ROOM = dataDict['room']
+  return dataDict
 }
 
 function updateTeamScore(){
@@ -367,11 +365,10 @@ function updateTeamScore(){
 async function main() {
   let session_room = window.sessionStorage.getItem('room')
   if (session_room !== undefined && session_room !== null){
-    reloadInfo()
-    changeGameState('game')
+    dataDict = reloadInfo()
+    changeGameState('game', dataDict)
   }
   else{
-    console.log('LOGIN')
     changeGameState('login')
   }
 }
