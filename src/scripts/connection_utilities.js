@@ -50,7 +50,7 @@ function resolveMessage(msj, ownID, ships, client, channel, players, ownSpritePa
         break;
       case "Bullets movement":
         if(msj.id != ownID) {
-          const bullet = Bullet.create(galaxy, './assets/spaceship/bullet.png', 
+          const bullet = Bullet.create(galaxy, msj.bulletImgPath, 
           msj.x, msj.y, msj.angle, msj.bulletId, true)
           bullet.play()
           bullet.setState(1, 0)          
